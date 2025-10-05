@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
   "dev": "npx vite",
-  "build": "npx vite build --force",
+  "build": "npx vite build",
   "preview": "npx vite preview",
-  "server": "node server/index.js"
+  "start": "node server/index.js"
 }
 ,
   "dependencies": {
