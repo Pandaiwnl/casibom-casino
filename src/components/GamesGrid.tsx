@@ -55,11 +55,11 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
             <h2 className="text-2xl font-black text-center mb-4 text-white">
               POPÜLER
             </h2>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-3">
               {slotGames.slice(0, 15).map((game) => (
                 <div
                   key={game.id}
-                  className="game-card group cursor-pointer aspect-[1.2/1]"
+                  className="game-card group cursor-pointer aspect-[1.1/1]"
                   onClick={() => onGameClick(game.id)}
                 >
                   <div className="relative h-full">
@@ -73,14 +73,14 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
                     />
                     
                     {/* Mobile Badges - Smaller */}
-                    <div className="absolute top-0.5 right-0.5">
+                    <div className="absolute top-1 right-1">
                       {game.isHot && (
-                        <span className="bg-casino-red text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                        <span className="bg-casino-red text-white text-xs font-bold px-1 py-0.5 rounded">
                           HOT
                         </span>
                       )}
                       {game.isNew && (
-                        <span className="bg-casino-green text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                        <span className="bg-casino-green text-white text-xs font-bold px-1 py-0.5 rounded">
                           YENİ
                         </span>
                       )}
@@ -177,11 +177,11 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
             <h2 className="text-2xl font-black text-center mb-4 text-white">
               CANLI CASİNO
             </h2>
-            <div className="grid grid-cols-3 gap-1">
+            <div className="grid grid-cols-3 gap-3">
               {liveCasinoGames.slice(0, 15).map((game) => (
                 <div
                   key={game.id}
-                  className="game-card group cursor-pointer aspect-[1.2/1]"
+                  className="game-card group cursor-pointer aspect-[1.1/1]"
                   onClick={() => onGameClick(game.id)}
                 >
                   <div className="relative h-full">
@@ -195,14 +195,14 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
                     />
                     
                     {/* Mobile Badges - Smaller */}
-                    <div className="absolute top-0.5 right-0.5">
+                    <div className="absolute top-1 right-1">
                       {game.isHot && (
-                        <span className="bg-casino-red text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                        <span className="bg-casino-red text-white text-xs font-bold px-1 py-0.5 rounded">
                           HOT
                         </span>
                       )}
                       {game.isNew && (
-                        <span className="bg-casino-green text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                        <span className="bg-casino-green text-white text-xs font-bold px-1 py-0.5 rounded">
                           YENİ
                         </span>
                       )}
