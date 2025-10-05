@@ -4,11 +4,12 @@
   "description": "Casibom Casino Application",
   "type": "module",
   "scripts": {
-  "dev": "npx vite",
-  "build": "npx vite build",
-  "preview": "npx vite preview",
-  "start": "node server/index.js"
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "start": "vite preview"
 }
+
 ,
   "dependencies": {
     "express": "^4.18.2",
