@@ -30,21 +30,25 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
   ]);
 
   const [liveCasinoGames] = useState<Game[]>([
-    { id: '13', name: 'CANLI CASİNO', imageUrl: '/images/canli-casino-banner.png', isHot: false, isNew: false, category: 'live' },
-    { id: '14', name: 'Casibom Lightning Rulet', imageUrl: '/images/casibom-lightning-rulet.png', isHot: false, isNew: false, category: 'live' },
-    { id: '15', name: 'Casibom Özel Stüdyo', imageUrl: '/images/casibom-ozel-studio-1.png', isHot: false, isNew: false, category: 'live' },
-    { id: '16', name: 'Casibom Özel Rulet', imageUrl: '/images/casibom-ozel-rulet.png', isHot: false, isNew: false, category: 'live' },
-    { id: '17', name: 'Blackjack Lobby', imageUrl: '/images/blackjack-lobby.png', isHot: false, isNew: false, category: 'live' },
-    { id: '18', name: 'Casibom VIP Blackjack', imageUrl: '/images/casibom-vip-blackjack.png', isHot: false, isNew: false, category: 'live' },
+    { id: '13', name: 'Casibom Lightning Rulet', imageUrl: '/images/casibom-lightning-rulet.png', isHot: false, isNew: false, category: 'live' },
+    { id: '14', name: 'Casibom Özel Stüdyo', imageUrl: '/images/casibom-ozel-studio-1.png', isHot: false, isNew: false, category: 'live' },
+    { id: '15', name: 'Casibom Özel Rulet', imageUrl: '/images/casibom-ozel-rulet.png', isHot: false, isNew: false, category: 'live' },
+    { id: '16', name: 'Blackjack Lobby', imageUrl: '/images/blackjack-lobby.png', isHot: false, isNew: false, category: 'live' },
+    { id: '17', name: 'Casibom VIP Blackjack', imageUrl: '/images/casibom-vip-blackjack.png', isHot: false, isNew: false, category: 'live' },
+    { id: '18', name: 'Crazy Time', imageUrl: '/images/crazy-time.png', isHot: false, isNew: false, category: 'live' },
+    { id: '19', name: 'Türkçe Masalar', imageUrl: '/images/turkce-masalar.png', isHot: false, isNew: false, category: 'live' },
+    { id: '20', name: 'Spaceman', imageUrl: '/images/spaceman.png', isHot: false, isNew: false, category: 'live' },
+    { id: '21', name: 'Ice Fishing Casibom', imageUrl: '/images/ice-fishing-casibom.png', isHot: false, isNew: false, category: 'live' },
+    { id: '22', name: 'Money Time', imageUrl: '/images/money-time.png', isHot: false, isNew: false, category: 'live' },
+    { id: '23', name: 'Sweet Bonanza Candyland', imageUrl: '/images/sweet-bonanza-candyland.png', isHot: false, isNew: false, category: 'live' },
   ]);
 
   return (
-    <div className="py-12 bg-primary">
-      {/* 🎯 Mobil Görünüm */}
+    <div className="py-12 bg-primary text-white">
+      {/* 📱 Mobil */}
       <div className="block md:hidden">
-        {/* Slot Games */}
         <section id="games" className="mb-16">
-          <h2 className="text-3xl font-extrabold text-center mb-6 text-white">POPÜLER</h2>
+          <h2 className="text-3xl font-extrabold text-center mb-6">POPÜLER</h2>
           <div className="grid grid-cols-3 gap-3 px-3">
             {slotGames.map((game) => (
               <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer" onClick={() => onGameClick(game.id)}>
@@ -52,14 +56,10 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
                   src={game.imageUrl}
                   alt={game.name}
                   className="w-full h-auto aspect-[1.6/1] object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
-                  }}
                 />
               </div>
             ))}
           </div>
-
           <div className="text-center mt-10">
             <button className="bg-yellow-500 text-black font-bold px-10 py-3 rounded-lg hover:bg-yellow-400 transition">
               HEPSİNİ GÖR
@@ -67,9 +67,8 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
           </div>
         </section>
 
-        {/* Live Casino */}
         <section id="live-casino" className="mt-16">
-          <h2 className="text-3xl font-extrabold text-center mb-6 text-white">CANLI CASİNO</h2>
+          <h2 className="text-3xl font-extrabold text-center mb-6">CANLI CASİNO</h2>
           <div className="grid grid-cols-3 gap-3 px-3">
             {liveCasinoGames.map((game) => (
               <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer" onClick={() => onGameClick(game.id)}>
@@ -77,9 +76,6 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
                   src={game.imageUrl}
                   alt={game.name}
                   className="w-full h-auto aspect-[1.6/1] object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
-                  }}
                 />
               </div>
             ))}
@@ -87,10 +83,49 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
         </section>
       </div>
 
-      {/* 💻 Masaüstü Görünüm */}
+      {/* 💻 Masaüstü */}
       <div className="hidden md:block">
-        {/* Burada senin mevcut masaüstü düzenin aynı şekilde kalacak */}
-        {/* Hiçbir şey değişmedi */}
+        {/* Slot Section */}
+        <section id="games" className="mb-20 max-w-7xl mx-auto flex gap-4 px-4">
+          {/* Sol Taraf Görsel */}
+          <div className="w-[220px] flex-shrink-0 flex flex-col items-center justify-between">
+            <img src="/images/popüler.png" alt="Popüler" className="rounded-lg mb-4" />
+            <button className="bg-white text-black px-6 py-2 rounded font-semibold hover:bg-gray-200 transition">HEPSİNİ GÖR</button>
+          </div>
+
+          {/* Sağ Taraf Grid */}
+          <div className="flex-1 grid grid-cols-4 gap-4">
+            {slotGames.map((game) => (
+              <div key={game.id} className="relative group cursor-pointer">
+                <img src={game.imageUrl} alt={game.name} className="w-full h-[180px] object-cover rounded-lg" />
+                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition">
+                  <h3 className="text-center text-sm font-semibold">{game.name}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Live Casino Section */}
+        <section id="live-casino" className="max-w-7xl mx-auto flex gap-4 px-4">
+          {/* Sol Taraf Görsel */}
+          <div className="w-[220px] flex-shrink-0 flex flex-col items-center justify-between">
+            <img src="/images/canli-casino.png" alt="Canlı Casino" className="rounded-lg mb-4" />
+            <button className="bg-white text-black px-6 py-2 rounded font-semibold hover:bg-gray-200 transition">HEPSİNİ GÖR</button>
+          </div>
+
+          {/* Sağ Taraf Grid */}
+          <div className="flex-1 grid grid-cols-4 gap-4">
+            {liveCasinoGames.map((game) => (
+              <div key={game.id} className="relative group cursor-pointer">
+                <img src={game.imageUrl} alt={game.name} className="w-full h-[180px] object-cover rounded-lg" />
+                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-lg transition">
+                  <h3 className="text-center text-sm font-semibold">{game.name}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );
