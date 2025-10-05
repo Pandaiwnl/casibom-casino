@@ -51,22 +51,22 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
         <div className="max-w-7xl mx-auto px-4">
           
           {/* Mobile Layout - 3 column grid like in the image */}
-          <div className="block md:hidden">
-            <h2 className="text-2xl font-black text-center mb-4 text-white">
+          <div className="block md:hidden px-2">
+            <h2 className="text-2xl font-black text-center mb-6 text-white">
               POPÜLER
             </h2>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               {slotGames.slice(0, 15).map((game) => (
                 <div
                   key={game.id}
-                  className="game-card group cursor-pointer aspect-[1.1/1]"
+                  className="game-card group cursor-pointer aspect-[1.3/1]"
                   onClick={() => onGameClick(game.id)}
                 >
                   <div className="relative h-full">
                     <img
                       src={game.imageUrl}
                       alt={game.name}
-                      className="w-full h-full object-cover rounded"
+                      className="w-full h-full object-cover rounded-lg"
                       onError={(e) => {
                         e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
                       }}
@@ -91,8 +91,8 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
             </div>
             
             {/* Mobile See All Button */}
-            <div className="text-center mt-6">
-              <button className="bg-secondary text-primary px-12 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
+            <div className="text-center mt-8">
+              <button className="bg-secondary text-primary px-16 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
                 HEPSİNİ GÖR
               </button>
             </div>
@@ -173,22 +173,22 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
         <div className="max-w-7xl mx-auto px-4">
           
           {/* Mobile Layout for Live Casino */}
-          <div className="block md:hidden">
-            <h2 className="text-2xl font-black text-center mb-4 text-white">
+          <div className="block md:hidden px-2">
+            <h2 className="text-2xl font-black text-center mb-6 text-white">
               CANLI CASİNO
             </h2>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2">
               {liveCasinoGames.slice(0, 15).map((game) => (
                 <div
                   key={game.id}
-                  className="game-card group cursor-pointer aspect-[1.1/1]"
+                  className="game-card group cursor-pointer aspect-[1.3/1]"
                   onClick={() => onGameClick(game.id)}
                 >
                   <div className="relative h-full">
                     <img
                       src={game.imageUrl}
                       alt={game.name}
-                      className="w-full h-full object-cover rounded"
+                      className="w-full h-full object-cover rounded-lg"
                       onError={(e) => {
                         e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
                       }}
@@ -213,8 +213,8 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
             </div>
             
             {/* Mobile See All Button for Live Casino */}
-            <div className="text-center mt-6">
-              <button className="bg-secondary text-primary px-12 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
+            <div className="text-center mt-8">
+              <button className="bg-secondary text-primary px-16 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
                 HEPSİNİ GÖR
               </button>
             </div>
