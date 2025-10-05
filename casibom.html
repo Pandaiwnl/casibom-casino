@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casibom Logo</title>
+<style>
+  body {
+    background-color: #151414;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .logo {
+    position: relative;
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+    font-size: 4rem;
+  }
+
+  .logo .casi {
+    color: #ffffff;
+  }
+
+  .logo .bom {
+    color: #fca311; /* turuncuya yakın ton */
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Göz kırpma efekti sadece 'o' harfinde */
+  .logo .bom span {
+    display: inline-block;
+    transform-origin: center;
+    animation: blink 4s infinite;
+  }
+
+  @keyframes blink {
+    0%, 90%, 100% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(0.1);
+    }
+  }
+
+  /* Altındaki gülümseme çizgisi */
+  .smile {
+    position: absolute;
+    bottom: -15px;
+    right: 5px;
+    width: 80px;
+    height: 35px;
+    border-bottom: 5px solid #fca311;
+    border-radius: 0 0 80px 80px;
+  }
+</style>
+</head>
+<body>
+  <div class="logo">
+    <span class="casi">casi</span><span class="bom">b<span>o</span>m</span>
+    <div class="smile"></div>
+  </div>
+</body>
+</html>
