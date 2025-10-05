@@ -49,68 +49,120 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
       {/* Slot Games Section */}
       <section id="games" className="mb-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-black text-center mb-12 text-white">
-            POPÜLER OYUNLAR
-          </h2>
-          <div className="flex gap-4">
-            {/* Popüler Image - Left Side */}
-            <div className="hidden lg:block flex-shrink-0">
-              <img 
-                src="/images/popüler.png" 
-                alt="Popüler" 
-                className="h-full object-cover rounded-lg"
-                style={{ height: '700px' }}
-              />
-            </div>
-            
-            {/* Slot Games Grid - Right Side */}
-            <div className="flex flex-wrap gap-4 flex-1">
-              {slotGames.map((game) => (
+          
+          {/* Mobile Layout - 3 column grid like in the image */}
+          <div className="block md:hidden">
+            <h2 className="text-2xl font-black text-center mb-4 text-white">
+              POPÜLER
+            </h2>
+            <div className="grid grid-cols-3 gap-1">
+              {slotGames.slice(0, 15).map((game) => (
                 <div
                   key={game.id}
-                  className="game-card group cursor-pointer"
-                  style={{ width: '280px', height: '220px' }}
+                  className="game-card group cursor-pointer aspect-[1.2/1]"
                   onClick={() => onGameClick(game.id)}
                 >
-                  <div className="relative">
+                  <div className="relative h-full">
                     <img
                       src={game.imageUrl}
                       alt={game.name}
-                      className="w-full h-full object-cover rounded-lg mb-2"
-                      style={{ width: '280px', height: '220px' }}
+                      className="w-full h-full object-cover rounded"
                       onError={(e) => {
                         e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
                       }}
                     />
                     
-                    {/* Badges */}
-                    <div className="absolute top-2 right-2 flex flex-col gap-1">
+                    {/* Mobile Badges - Smaller */}
+                    <div className="absolute top-0.5 right-0.5">
                       {game.isHot && (
-                        <span className="bg-casino-red text-white text-xs font-bold px-2 py-1 rounded">
+                        <span className="bg-casino-red text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
                           HOT
                         </span>
                       )}
                       {game.isNew && (
-                        <span className="bg-casino-green text-white text-xs font-bold px-2 py-1 rounded">
+                        <span className="bg-casino-green text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
                           YENİ
                         </span>
                       )}
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Mobile See All Button */}
+            <div className="text-center mt-6">
+              <button className="bg-secondary text-primary px-12 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
+                HEPSİNİ GÖR
+              </button>
+            </div>
+          </div>
 
-                    {/* Game Name Overlay - Shows on Hover */}
-                    <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center p-3">
-                      <div className="text-center">
-                        <h3 className="text-white font-bold text-base leading-tight text-center">
-                          {game.name}
-                        </h3>
-                        <div className="mt-3 bg-secondary text-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto">
-                          <i className="fas fa-play text-2xl"></i>
+          {/* Desktop Layout - Original with sidebar */}
+          <div className="hidden md:block">
+            <h2 className="text-4xl font-black text-center mb-12 text-white">
+              POPÜLER OYUNLAR
+            </h2>
+            <div className="flex gap-4">
+              {/* Popüler Image - Left Side */}
+              <div className="hidden lg:block flex-shrink-0">
+                <img 
+                  src="/images/popüler.png" 
+                  alt="Popüler" 
+                  className="h-full object-cover rounded-lg"
+                  style={{ height: '700px' }}
+                />
+              </div>
+              
+              {/* Slot Games Grid - Right Side */}
+              <div className="flex flex-wrap gap-4 flex-1">
+                {slotGames.map((game) => (
+                  <div
+                    key={game.id}
+                    className="game-card group cursor-pointer"
+                    style={{ width: '280px', height: '220px' }}
+                    onClick={() => onGameClick(game.id)}
+                  >
+                    <div className="relative">
+                      <img
+                        src={game.imageUrl}
+                        alt={game.name}
+                        className="w-full h-full object-cover rounded-lg mb-2"
+                        style={{ width: '280px', height: '220px' }}
+                        onError={(e) => {
+                          e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
+                        }}
+                      />
+                      
+                      {/* Badges */}
+                      <div className="absolute top-2 right-2 flex flex-col gap-1">
+                        {game.isHot && (
+                          <span className="bg-casino-red text-white text-xs font-bold px-2 py-1 rounded">
+                            HOT
+                          </span>
+                        )}
+                        {game.isNew && (
+                          <span className="bg-casino-green text-white text-xs font-bold px-2 py-1 rounded">
+                            YENİ
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Game Name Overlay - Shows on Hover */}
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center p-3">
+                        <div className="text-center">
+                          <h3 className="text-white font-bold text-base leading-tight text-center">
+                            {game.name}
+                          </h3>
+                          <div className="mt-3 bg-secondary text-primary w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                            <i className="fas fa-play text-2xl"></i>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -119,10 +171,61 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
       {/* Live Casino Section */}
       <section id="live-casino" className="mt-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-black text-center mb-12 text-white">
-            CANLI CASİNO
-          </h2>
-          <div className="flex gap-4">
+          
+          {/* Mobile Layout for Live Casino */}
+          <div className="block md:hidden">
+            <h2 className="text-2xl font-black text-center mb-4 text-white">
+              CANLI CASİNO
+            </h2>
+            <div className="grid grid-cols-3 gap-1">
+              {liveCasinoGames.slice(0, 15).map((game) => (
+                <div
+                  key={game.id}
+                  className="game-card group cursor-pointer aspect-[1.2/1]"
+                  onClick={() => onGameClick(game.id)}
+                >
+                  <div className="relative h-full">
+                    <img
+                      src={game.imageUrl}
+                      alt={game.name}
+                      className="w-full h-full object-cover rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://via.placeholder.com/280x220/333/fff?text=${game.name}`;
+                      }}
+                    />
+                    
+                    {/* Mobile Badges - Smaller */}
+                    <div className="absolute top-0.5 right-0.5">
+                      {game.isHot && (
+                        <span className="bg-casino-red text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                          HOT
+                        </span>
+                      )}
+                      {game.isNew && (
+                        <span className="bg-casino-green text-white text-xs font-bold px-0.5 py-0.5 rounded text-xs">
+                          YENİ
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Mobile See All Button for Live Casino */}
+            <div className="text-center mt-6">
+              <button className="bg-secondary text-primary px-12 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors">
+                HEPSİNİ GÖR
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Layout for Live Casino */}
+          <div className="hidden md:block">
+            <h2 className="text-4xl font-black text-center mb-12 text-white">
+              CANLI CASİNO
+            </h2>
+            <div className="flex gap-4">
             {/* Ice Fishing Image - Left Side */}
             <div className="hidden lg:block flex-shrink-0">
               <img 
@@ -183,9 +286,9 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
               ))}
             </div>
           </div>
+          </div>
         </div>
       </section>
     </div>
   );
 }
-

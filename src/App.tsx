@@ -43,19 +43,9 @@ function App() {
   };
 
   const handleGameClick = (gameId: string) => {
-    if (!user) {
-      setShowRegister(true);
-      return;
-    }
-    
-    if (user.balance <= 0) {
-      setShowPayment(true);
-      setSelectedGame(gameId);
-      return;
-    }
-    
-    // User has balance, can play game
-    alert('Oyun başlatılıyor...');
+    // Always redirect to registration modal when clicking on games
+    setShowRegister(true);
+    setSelectedGame(gameId);
   };
 
   const handlePaymentSuccess = (newBalance: number) => {

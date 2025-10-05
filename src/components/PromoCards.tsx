@@ -4,11 +4,8 @@ export default function PromoCards() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Telegram Card - Left Side, Wide */}
-          <a 
-            href="https://t.me/casibom"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="promo-card relative overflow-hidden rounded-xl cursor-pointer h-48 flex-1 block"
+          <div 
+            className="promo-card relative overflow-hidden rounded-xl h-48 flex-1"
             data-testid="card-telegram"
           >
             <img 
@@ -26,7 +23,7 @@ export default function PromoCards() {
                 </div>
               </div>
             </div>
-          </a>
+          </div>
 
           {/* VIP and Mobile Cards - Right Side, Side by Side */}
           <div className="flex flex-col md:flex-row gap-4 flex-1">
@@ -56,11 +53,8 @@ export default function PromoCards() {
             </div>
 
             {/* Mobile App Card */}
-            <a 
-              href="http://146.59.9.171/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="promo-card relative overflow-hidden rounded-xl cursor-pointer h-48 flex-1 block"
+            <div 
+              className="promo-card relative overflow-hidden rounded-xl h-48 flex-1"
               data-testid="card-mobile"
             >
               <img 
@@ -76,7 +70,7 @@ export default function PromoCards() {
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           </div>
         </div>
       </div>

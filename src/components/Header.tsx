@@ -80,16 +80,16 @@ export default function Header({ user, onLogin, onRegister, onLogout, onPayment 
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 <button
                   onClick={onLogin}
-                  className="bg-white hover:bg-gray-100 text-black px-8 py-3 rounded-lg font-bold text-lg transition-colors"
+                  className="bg-white hover:bg-gray-100 text-black px-3 py-2 md:px-8 md:py-3 rounded-lg font-bold text-sm md:text-lg transition-colors"
                 >
                   GİRİŞ
                 </button>
                 <button 
                   onClick={onRegister}
-                  className="bg-casino-green hover:bg-casino-green/90 text-white px-8 py-3 rounded-lg font-bold text-lg transition-colors"
+                  className="bg-casino-green hover:bg-casino-green/90 text-white px-3 py-2 md:px-8 md:py-3 rounded-lg font-bold text-sm md:text-lg transition-colors"
                 >
                   ÜYE OL
                 </button>
