@@ -88,7 +88,7 @@ function App() {
             Güncel adresimiz için:
             <span className="text-secondary ml-2 break-all">
               <i className="fab fa-telegram mr-1"></i>
-              t.me/casibomadres linkini kullanınız
+              t.ly/casibomadres
             </span>
           </p>
         </section>
@@ -139,23 +139,23 @@ function App() {
         <div className="fixed bottom-0 left-0 w-full bg-[#111] text-white border-t border-gray-700 flex justify-around py-3 md:hidden z-50">
           <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <FaFutbol className="text-xl mb-1" />
-            Spor
+            SPOR
           </button>
           <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <GiCardAceHearts className="text-xl mb-1" />
-            Casino
+            <span className="text-2xl mb-1">7</span>
+            CASİNO
           </button>
           <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <FaHeadset className="text-xl mb-1" />
-            Canlı Destek
+            CANLI DESTEK
           </button>
           <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <FaUserFriends className="text-xl mb-1" />
-            Canlı Casino
+            <span className="text-xl mb-1">🎰</span>
+            CANLI CASİNO
           </button>
           <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <HiMenu className="text-xl mb-1" />
-            Menü
+            MENÜ
           </button>
         </div>
       )}

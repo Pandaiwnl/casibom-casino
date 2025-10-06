@@ -87,45 +87,80 @@ export default function WinnersSection() {
   return (
     <section className="py-12 bg-primary" id="winners">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-black text-center mb-12 text-white">
+        <h2 className="text-2xl md:text-4xl font-black text-center mb-6 md:mb-12 text-white">
           SON KAZANANLAR
         </h2>
-        <div className="winners-container overflow-x-hidden relative">
-          <div className="flex gap-4 auto-scroll">
-            {/* Duplicate winners for seamless loop */}
-            {[...winners, ...winners].map((winner, index) => (
-              <div
-                key={`${winner.id}-${index}`}
-                className="bg-gray-800 rounded-lg p-4 min-w-[280px] flex-shrink-0 flex items-center space-x-4"
-              >
-                <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center">
-                  <img 
-                    src={winner.gameImageUrl} 
-                    alt={winner.gameName}
-                    className="w-8 h-8 rounded"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
+        
+        {/* Mobile Winners */}
+        <div className="block md:hidden">
+          <div className="bg-gray-800 rounded-lg p-4 mx-3">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center">
+                <img 
+                  src="/images/blackjack-lobby.png" 
+                  alt="Blackjack"
+                  className="w-8 h-8 rounded"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="text-white font-bold text-sm mb-1">
+                  E. Ö.
                 </div>
-                <div className="flex-1">
-                  <div className="text-white font-bold text-sm mb-1">
-                    {winner.playerInitials}
-                  </div>
-                  <div className="text-white font-semibold text-xs">
-                    {winner.gameName}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-casino-blue font-black text-lg">
-                    {formatAmount(winner.amount)}
-                  </div>
-                </div>
-                <div className="text-secondary">
-                  <i className="fas fa-arrow-right text-sm"></i>
+                <div className="text-white font-semibold text-xs">
+                  Free Bet VIP Blackjack Live
                 </div>
               </div>
-            ))}
+              <div className="text-right">
+                <div className="text-yellow-400 font-black text-lg">
+                  40.000,00
+                </div>
+              </div>
+              <div className="text-yellow-400">
+                <i className="fas fa-arrow-right text-sm"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Winners */}
+        <div className="hidden md:block">
+          <div className="winners-container overflow-x-hidden relative">
+            <div className="flex gap-4 auto-scroll">
+              {/* Duplicate winners for seamless loop */}
+              {[...winners, ...winners].map((winner, index) => (
+                <div
+                  key={`${winner.id}-${index}`}
+                  className="bg-gray-800 rounded-lg p-4 min-w-[280px] flex-shrink-0 flex items-center space-x-4"
+                >
+                  <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center">
+                    <img 
+                      src={winner.gameImageUrl} 
+                      alt={winner.gameName}
+                      className="w-8 h-8 rounded"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-white font-bold text-sm mb-1">
+                      {winner.playerInitials}
+                    </div>
+                    <div className="text-white font-semibold text-xs">
+                      {winner.gameName}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-casino-blue font-black text-lg">
+                      {formatAmount(winner.amount)}
+                    </div>
+                  </div>
+                  <div className="text-secondary">
+                    <i className="fas fa-arrow-right text-sm"></i>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

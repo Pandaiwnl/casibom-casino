@@ -19,14 +19,14 @@ export default function Header({ user, onLogin, onRegister, onLogout, onPayment 
           {/* Logo - Far Left */}
           <div className="flex items-center">
             <div className="logo relative">
-              <span className="casi text-white text-4xl font-black">casi</span>
-              <span className="bom text-orange-500 text-4xl font-black relative inline-block">
+              <span className="casi text-white text-2xl md:text-4xl font-black">casi</span>
+              <span className="bom text-orange-500 text-2xl md:text-4xl font-black relative inline-block">
                 <span className="relative">
                   b
                   <span className="animate-blink inline-block transform-origin-center">
                     o
                   </span>
-                  <div className="smile absolute -bottom-1 left-0 w-full h-4 border-b-4 border-orange-600 rounded-b-full"></div>
+                  <div className="smile absolute -bottom-1 left-0 w-full h-2 md:h-4 border-b-2 md:border-b-4 border-orange-600 rounded-b-full"></div>
                 </span>m
               </span>
             </div>
@@ -55,18 +55,18 @@ export default function Header({ user, onLogin, onRegister, onLogout, onPayment 
           </nav>
 
           {/* User Section - Far Right */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             {user ? (
-              <div className="flex items-center space-x-2 md:space-x-3">
+              <div className="flex items-center space-x-1 md:space-x-3">
                 {/* Balance Button - White */}
-                <div className="bg-white text-black px-2 py-1 md:px-3 md:py-2 rounded-lg font-bold text-xs md:text-sm">
+                <div className="bg-white text-black px-1 py-1 md:px-3 md:py-2 rounded-lg font-bold text-xs md:text-sm">
                   ₺ {user.balance.toFixed(2)}
                 </div>
                 
                 {/* Deposit Button - Green */}
                 <button
                   onClick={onPayment}
-                  className="bg-casino-green hover:bg-casino-green/90 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-colors"
+                  className="bg-casino-green hover:bg-casino-green/90 text-white px-1 py-1 md:px-4 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-colors"
                 >
                   PARA YATIR
                 </button>
@@ -77,24 +77,24 @@ export default function Header({ user, onLogin, onRegister, onLogout, onPayment 
                     onClick={onLogout}
                     className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors"
                   >
-                    <div className="w-6 h-6 md:w-8 md:h-8 bg-secondary rounded-full flex items-center justify-center border border-black">
-                      <span className="text-black font-bold text-sm md:text-lg">💣</span>
+                    <div className="w-5 h-5 md:w-8 md:h-8 bg-secondary rounded-full flex items-center justify-center border border-black">
+                      <span className="text-black font-bold text-xs md:text-lg">💣</span>
                     </div>
                     <i className="fas fa-chevron-down text-xs hidden md:block"></i>
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-2 md:space-x-4">
+              <div className="flex items-center space-x-1 md:space-x-4">
                 <button
                   onClick={onLogin}
-                  className="bg-white hover:bg-gray-100 text-black px-3 py-2 md:px-8 md:py-3 rounded-lg font-bold text-sm md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="bg-white hover:bg-gray-100 text-black px-2 py-1 md:px-8 md:py-3 rounded-lg font-bold text-xs md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   GİRİŞ
                 </button>
                 <button 
                   onClick={onRegister}
-                  className="bg-casino-bright-green hover:bg-casino-green text-white px-3 py-2 md:px-8 md:py-3 rounded-lg font-bold text-sm md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="bg-casino-bright-green hover:bg-casino-green text-white px-2 py-1 md:px-8 md:py-3 rounded-lg font-bold text-xs md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   ÜYE OL
                 </button>

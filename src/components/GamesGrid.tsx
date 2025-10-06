@@ -50,7 +50,7 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
         <section id="games" className="mb-16">
           <h2 className="text-3xl font-extrabold text-center mb-6">POPÜLER</h2>
           <div className="grid grid-cols-3 gap-3 px-3">
-            {slotGames.map((game) => (
+            {slotGames.slice(0, 15).map((game) => (
               <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer" onClick={() => onGameClick(game.id)}>
                 <img
                   src={game.imageUrl}
@@ -69,9 +69,9 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
 
         <section id="live-casino" className="mt-16">
           <h2 className="text-3xl font-extrabold text-center mb-6">CANLI CASİNO</h2>
-          <div className="grid grid-cols-3 gap-3 px-3">
-            {liveCasinoGames.map((game) => (
-              <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer" onClick={() => onGameClick(game.id)}>
+          <div className="flex gap-3 px-3 overflow-x-auto">
+            {liveCasinoGames.slice(0, 6).map((game) => (
+              <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer flex-shrink-0 w-32" onClick={() => onGameClick(game.id)}>
                 <img
                   src={game.imageUrl}
                   alt={game.name}
