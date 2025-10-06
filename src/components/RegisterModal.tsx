@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User } from '../App';
 
 interface RegisterModalProps {
@@ -22,6 +22,13 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [attemptCount, setAttemptCount] = useState(0);
+
+  // Reset attempt count when modal opens
+  useEffect(() => {
+    setAttemptCount(0);
+    setError('');
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,33 +53,30 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
       return;
     }
 
+    // İlk deneme hatası, ikinci deneme başarılı
+    if (attemptCount === 0) {
+      setAttemptCount(1);
+      setError('Sunucu hatası. Lütfen tekrar deneyin.');
+      setLoading(false);
+      return;
+    }
+
+    // İkinci deneme - başarılı kayıt
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          currency: formData.currency,
-          verificationCode: formData.verificationCode,
-          phone: formData.phone
-        }),
-      });
+      // Simulated successful registration
+      const userData = {
+        id: Date.now().toString(),
+        username: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        balance: 100.00 // Starting balance
+      };
 
-      const data = await response.json();
-
-      if (response.ok) {
-        onSuccess(data.user);
-      } else {
-        setError(data.message || 'Kayıt olunamadı');
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      onSuccess(userData);
     } catch (error) {
       setError('Bir hata oluştu. Lütfen tekrar deneyin.');
-    } finally {
       setLoading(false);
     }
   };
@@ -270,7 +274,7 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
             disabled={loading}
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
           >
-            {loading ? 'Kayıt olunuyor...' : 'ÜYE OL'}
+            {loading ? 'Kayıt olunuyor...' : attemptCount > 0 ? 'TEKRAR DENE' : 'ÜYE OL'}
           </button>
         </form>
 

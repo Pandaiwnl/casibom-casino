@@ -57,27 +57,32 @@ export default function Header({ user, onLogin, onRegister, onLogout, onPayment 
           {/* User Section - Far Right */}
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="text-right">
-                  <div className="text-base text-gray-300">Hoş geldin</div>
-                  <div className="font-bold text-white text-lg">{user.username}</div>
+              <div className="flex items-center space-x-2 md:space-x-3">
+                {/* Balance Button - White */}
+                <div className="bg-white text-black px-2 py-1 md:px-3 md:py-2 rounded-lg font-bold text-xs md:text-sm">
+                  ₺ {user.balance.toFixed(2)}
                 </div>
-                <div className="flex items-center space-x-2 bg-secondary/20 px-4 py-3 rounded-lg">
-                  <i className="fas fa-coins text-secondary text-lg"></i>
-                  <span className="font-bold text-white text-lg">{user.balance.toFixed(2)} TL</span>
-                </div>
+                
+                {/* Deposit Button - Green */}
                 <button
                   onClick={onPayment}
-                  className="bg-accent hover:bg-accent/90 text-white px-6 py-3 rounded-lg font-bold text-lg transition-colors"
+                  className="bg-casino-green hover:bg-casino-green/90 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-colors"
                 >
-                  Para Yatır
+                  PARA YATIR
                 </button>
-                <button
-                  onClick={onLogout}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  <i className="fas fa-sign-out-alt text-2xl"></i>
-                </button>
+                
+                {/* Bomb Icon with Dropdown */}
+                <div className="relative">
+                  <button 
+                    onClick={onLogout}
+                    className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors"
+                  >
+                    <div className="w-6 h-6 md:w-8 md:h-8 bg-secondary rounded-full flex items-center justify-center border border-black">
+                      <span className="text-black font-bold text-sm md:text-lg">💣</span>
+                    </div>
+                    <i className="fas fa-chevron-down text-xs hidden md:block"></i>
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex items-center space-x-2 md:space-x-4">
