@@ -38,9 +38,6 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
     { id: '18', name: 'Crazy Time', imageUrl: '/images/crazy-time.png', isHot: false, isNew: false, category: 'live' },
     { id: '19', name: 'Türkçe Masalar', imageUrl: '/images/turkce-masalar.png', isHot: false, isNew: false, category: 'live' },
     { id: '20', name: 'Spaceman', imageUrl: '/images/spaceman.png', isHot: false, isNew: false, category: 'live' },
-    { id: '21', name: 'Ice Fishing Casibom', imageUrl: '/images/ice-fishing-casibom.png', isHot: false, isNew: false, category: 'live' },
-    { id: '22', name: 'Money Time', imageUrl: '/images/money-time.png', isHot: false, isNew: false, category: 'live' },
-    { id: '23', name: 'Sweet Bonanza Candyland', imageUrl: '/images/sweet-bonanza-candyland.png', isHot: false, isNew: false, category: 'live' },
   ]);
 
   return (
@@ -51,17 +48,32 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
           <h2 className="text-3xl font-extrabold text-center mb-6">POPÜLER</h2>
           <div className="grid grid-cols-3 gap-3 px-3">
             {slotGames.slice(0, 15).map((game) => (
-              <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer" onClick={() => onGameClick(game.id)}>
+              <div 
+                key={game.id} 
+                className="rounded-xl overflow-hidden cursor-pointer select-none" 
+                onClick={() => onGameClick(game.id)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  onGameClick(game.id);
+                }}
+              >
                 <img
                   src={game.imageUrl}
                   alt={game.name}
-                  className="w-full h-auto aspect-[1.6/1] object-cover"
+                  className="w-full h-auto aspect-[1.6/1] object-cover pointer-events-none"
                 />
               </div>
             ))}
           </div>
           <div className="text-center mt-10">
-            <button className="bg-yellow-500 text-black font-bold px-10 py-3 rounded-lg hover:bg-yellow-400 transition">
+            <button 
+              className="bg-yellow-500 text-black font-bold px-10 py-3 rounded-lg hover:bg-yellow-400 transition"
+              onClick={() => onGameClick('all-games')}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                onGameClick('all-games');
+              }}
+            >
               HEPSİNİ GÖR
             </button>
           </div>
@@ -70,12 +82,20 @@ export default function GamesGrid({ onGameClick }: GamesGridProps) {
         <section id="live-casino" className="mt-16">
           <h2 className="text-3xl font-extrabold text-center mb-6">CANLI CASİNO</h2>
           <div className="flex gap-3 px-3 overflow-x-auto">
-            {liveCasinoGames.slice(0, 6).map((game) => (
-              <div key={game.id} className="rounded-xl overflow-hidden cursor-pointer flex-shrink-0 w-32" onClick={() => onGameClick(game.id)}>
+            {liveCasinoGames.map((game) => (
+              <div 
+                key={game.id} 
+                className="rounded-xl overflow-hidden cursor-pointer flex-shrink-0 w-32 select-none" 
+                onClick={() => onGameClick(game.id)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  onGameClick(game.id);
+                }}
+              >
                 <img
                   src={game.imageUrl}
                   alt={game.name}
-                  className="w-full h-auto aspect-[1.6/1] object-cover"
+                  className="w-full h-auto aspect-[1.6/1] object-cover pointer-events-none"
                 />
               </div>
             ))}

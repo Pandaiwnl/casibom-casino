@@ -22,8 +22,50 @@ export default function PaymentModal({ onClose, user, onSuccess }: PaymentModalP
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [methodsOverlayOpen, setMethodsOverlayOpen] = useState(false);
+  const [bonusOverlayOpen, setBonusOverlayOpen] = useState(false);
+  const [selectedBonus, setSelectedBonus] = useState<string>("Bonus istemiyorum.");
 
   const [paymentImages, setPaymentImages] = useState<{ id: string; src: string; alt: string; limit?: string }[]>([]);
+
+  // Bonus seçenekleri
+  const bonusOptions = [
+    {
+      id: "first-deposit",
+      title: "%100 İlk Yatırım Casino Bonusu (1000 TL'ye kadar)",
+      image: "/bonus5.png",
+      description: "İlk yatırımınızda %100 bonus kazanın!"
+    },
+    {
+      id: "second-deposit",
+      title: "%50 2. Yatırım Casino Bonusu (500 TL'ye kadar)",
+      image: "/bonus4.png",
+      description: "İkinci yatırımınızda %50 bonus kazanın!"
+    },
+    {
+      id: "third-deposit",
+      title: "%50 3. Yatırım Casino Bonusu (500 TL'ye kadar)",
+      image: "/bonus1 (1).png",
+      description: "Üçüncü yatırımınızda %50 bonus kazanın!"
+    },
+    {
+      id: "wager-free",
+      title: "10% Çevrimsiz Casino Bonusu",
+      image: "/bonus2.png",
+      description: "Çevrim şartı olmayan %10 bonus!"
+    },
+    {
+      id: "crypto-bonus",
+      title: "20% Kripto Bonusu",
+      image: "/bonus3.png",
+      description: "Kripto para yatırımlarında %20 bonus!"
+    },
+    {
+      id: "no-bonus",
+      title: "Bonus istemiyorum.",
+      image: null,
+      description: "Herhangi bir bonus almak istemiyorum."
+    }
+  ];
 
   useEffect(() => {
     const methods = [
@@ -153,15 +195,13 @@ export default function PaymentModal({ onClose, user, onSuccess }: PaymentModalP
               <div className="text-center mb-6">
                 <h3 className="text-[#ffb400] font-bold text-lg mb-2">Adım 1</h3>
                 <p className="mb-4">Bonus seç</p>
-                <select
-                  value={bonus}
-                  onChange={(e) => setBonus(e.target.value)}
-                  className="bg-transparent border border-gray-600 text-white rounded-lg px-4 py-3 w-full max-w-md mx-auto block"
+                <button
+                  onClick={() => setBonusOverlayOpen(true)}
+                  className="bg-transparent border border-gray-600 text-white rounded-lg px-4 py-3 w-full max-w-md mx-auto block flex items-center justify-between"
                 >
-                  <option>Bonus istemiyorum.</option>
-                  <option>%10 Hoşgeldin Bonusu</option>
-                  <option>%15 Kayıp Bonusu</option>
-                </select>
+                  <span>{selectedBonus}</span>
+                  <span>▾</span>
+                </button>
               </div>
 
               <hr className="border-gray-700 my-6" />
@@ -323,17 +363,29 @@ export default function PaymentModal({ onClose, user, onSuccess }: PaymentModalP
                     setError(null);
                     setMessage(null);
                   }}
-                  className={`w-full flex items-center justify-between gap-4 px-4 py-3 text-left transition-all duration-200 border-l-4 ${
+                  className={`w-full flex items-center justify-between gap-6 px-6 py-6 text-left transition-all duration-200 border-l-4 ${
                     selectedMethod === img.id
                       ? "border-[#ffb400] bg-white/10"
                       : "border-transparent hover:border-[#ffb400]/80 hover:bg-white/5"
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="bg-white rounded-md p-2 w-28 h-12 flex items-center justify-center">
-                      <img src={img.src} alt={img.alt} className="max-h-10 object-contain" />
+                  <div className="flex items-center gap-6">
+                    <div className="w-40 h-20 flex items-center justify-center">
+                      <img 
+                        src={img.src} 
+                        alt={img.alt} 
+                        className="w-full h-full object-cover rounded-lg"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                      <div className="hidden w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                        <span className="text-gray-600 text-sm font-bold">{img.alt}</span>
+                      </div>
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <div className="text-white font-bold text-sm">{img.alt}</div>
                       <div className="text-[#ffb400] text-xs">Limitler: {img.limit || "—"}</div>
                     </div>
@@ -342,6 +394,102 @@ export default function PaymentModal({ onClose, user, onSuccess }: PaymentModalP
                   <i className="fas fa-chevron-right text-white/40"></i>
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BONUS SEÇİMİ POPUP */}
+      {bonusOverlayOpen && (
+        <div className="fixed inset-0 z-[55] flex items-center justify-center bg-black/80 p-4">
+          <div className="bg-[#111] rounded-xl w-full max-w-2xl overflow-hidden shadow-2xl border border-[#ffb400]/40">
+            <div className="bg-[#ffb400] text-black flex items-center justify-end px-4 py-3">
+              <button onClick={() => setBonusOverlayOpen(false)} className="text-2xl font-bold hover:opacity-80">✕</button>
+            </div>
+
+            <div className="px-4 py-3 border-b border-white/10">
+              <h3 className="text-[#ffb400] font-bold text-lg text-center">Bonus seç</h3>
+            </div>
+
+            <div className="max-h-[80vh] overflow-y-auto divide-y divide-white/10">
+              {bonusOptions.map((bonus) => (
+                <button
+                  key={bonus.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedBonus(bonus.title);
+                    setBonus(bonus.title);
+                    setBonusOverlayOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between gap-6 px-6 py-6 text-left transition-all duration-200 border-l-4 ${
+                    selectedBonus === bonus.title
+                      ? "border-[#ffb400] bg-white/10"
+                      : "border-transparent hover:border-[#ffb400]/80 hover:bg-white/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-6">
+                    {/* Checkbox */}
+                    <div className={`w-6 h-6 border-2 rounded flex items-center justify-center ${
+                      selectedBonus === bonus.title 
+                        ? "bg-[#ffb400] border-[#ffb400]" 
+                        : "border-white bg-transparent"
+                    }`}>
+                      {selectedBonus === bonus.title && (
+                        <span className="text-black text-lg font-bold">✓</span>
+                      )}
+                    </div>
+
+                    {/* Bonus Image */}
+                    {bonus.image && (
+                      <div className="w-40 h-20 flex items-center justify-center">
+                        <img 
+                          src={bonus.image} 
+                          alt={bonus.title} 
+                          className="w-full h-full object-cover rounded-lg"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            target.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                        <div className="hidden w-full h-full bg-gray-200 rounded flex items-center justify-center">
+                          <span className="text-gray-600 text-sm font-bold">BONUS</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Bonus Text */}
+                    <div className="flex-1">
+                      <div className="text-[#ffb400] text-sm font-medium">{bonus.description}</div>
+                    </div>
+                  </div>
+
+                  {/* DAHA FAZLA Button - sadece bonus seçenekleri için */}
+                  {bonus.id !== "no-bonus" && (
+                    <div className="flex items-center gap-3">
+                      <button 
+                        className="bg-[#ffb400] text-black px-4 py-2 rounded text-sm font-bold hover:bg-yellow-400 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // DAHA FAZLA butonuna tıklandığında bonus detaylarını göster
+                        }}
+                      >
+                        DAHA FAZLA
+                      </button>
+                      <i className="fas fa-chevron-right text-white/40 text-lg"></i>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-[#ffb400] p-4">
+              <button
+                onClick={() => setBonusOverlayOpen(false)}
+                className="w-full bg-[#ffb400] text-black font-bold py-3 px-6 rounded-lg hover:bg-yellow-400 transition-colors"
+              >
+                KAPAT
+              </button>
             </div>
           </div>
         </div>

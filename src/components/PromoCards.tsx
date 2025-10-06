@@ -1,4 +1,10 @@
-export default function PromoCards() {
+import { FaArrowRight } from 'react-icons/fa';
+
+interface PromoCardsProps {
+  onGameClick: (gameId: string) => void;
+}
+
+export default function PromoCards({ onGameClick }: PromoCardsProps) {
   return (
     <section className="py-8 bg-primary" id="promotions">
       <div className="max-w-[92rem] mx-auto px-2">
@@ -7,27 +13,44 @@ export default function PromoCards() {
           <div className="grid grid-cols-2 gap-3">
             {/* Telegram Card */}
             <div 
-              className="promo-card relative overflow-hidden rounded-xl h-32"
+              className="promo-card relative overflow-hidden rounded-xl h-48 col-span-2 cursor-pointer"
               data-testid="card-telegram"
+              onClick={() => onGameClick('telegram')}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                onGameClick('telegram');
+              }}
             >
               <img 
                 src="/images/telegram.jpg" 
                 alt="Telegram" 
                 className="w-full h-full object-cover rounded-xl"
               />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/40 rounded-xl"></div>
+              
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center text-white">
-                  <h3 className="text-lg font-black uppercase mb-1">KANALA KATIL</h3>
-                  <p className="text-sm font-bold">+200K ABONE</p>
-                  <p className="text-xs">CASİBOM TELEGRAM'DA</p>
+                  <h3 className="text-4xl font-black uppercase mb-4 leading-tight">
+                    KANALA<br />KATIL
+                  </h3>
+                  <button className="bg-black text-white px-6 py-3 rounded-lg font-bold text-sm flex items-center space-x-2 hover:bg-gray-800 transition-colors mx-auto">
+                    <span>+200K ABONE</span>
+                    <span className="ml-2">CASİBOM TELEGRAM'DA</span>
+                    <FaArrowRight className="ml-2 text-lg" />
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Mobile App Card */}
             <div 
-              className="promo-card relative overflow-hidden rounded-xl h-32"
+              className="promo-card relative overflow-hidden rounded-xl h-32 cursor-pointer"
               data-testid="card-mobile"
+              onClick={() => onGameClick('mobile-app')}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                onGameClick('mobile-app');
+              }}
             >
               <img 
                 src="/images/mobil.jpg" 

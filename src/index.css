@@ -11,6 +11,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0a0a0a !important;
+  color: white !important;
+}
+
+#root {
+  background-color: #0a0a0a !important;
+  color: white !important;
+  min-height: 100vh;
 }
 
 .promo-card {

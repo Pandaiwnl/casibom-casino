@@ -74,6 +74,19 @@ function App() {
         onRegister={() => setShowRegister(true)}
         onLogout={handleLogout}
         onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
+        showLogin={showLogin}
+        showRegister={showRegister}
+        onCloseLogin={() => setShowLogin(false)}
+        onCloseRegister={() => setShowRegister(false)}
+        onSwitchToRegister={() => {
+          setShowLogin(false);
+          setShowRegister(true);
+        }}
+        onSwitchToLogin={() => {
+          setShowRegister(false);
+          setShowLogin(true);
+        }}
+        onLoginSuccess={handleLogin}
       />
 
       {/* MAIN CONTENT */}
@@ -93,7 +106,7 @@ function App() {
           </p>
         </section>
         
-        <PromoCards />
+        <PromoCards onGameClick={handleGameClick} />
         <WinnersSection />
         <GamesGrid onGameClick={handleGameClick} />
       </main>
@@ -102,29 +115,6 @@ function App() {
       <div className="hidden md:block">
         <Footer />
       </div>
-
-      {/* MODALLAR */}
-      {showLogin && (
-        <LoginModal 
-          onClose={() => setShowLogin(false)}
-          onSuccess={handleLogin}
-          onSwitchToRegister={() => {
-            setShowLogin(false);
-            setShowRegister(true);
-          }}
-        />
-      )}
-
-      {showRegister && (
-        <RegisterModal 
-          onClose={() => setShowRegister(false)}
-          onSuccess={handleLogin}
-          onSwitchToLogin={() => {
-            setShowRegister(false);
-            setShowLogin(true);
-          }}
-        />
-      )}
 
       {showPayment && (
         <PaymentModal 

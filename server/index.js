@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Serve images directory
-app.use('/images', express.static(path.join(__dirname, '../casibom foot')));
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 declare module 'http' {
   interface IncomingMessage {

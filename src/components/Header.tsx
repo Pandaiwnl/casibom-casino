@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { User } from '../App';
+import { useState } from "react";
+import { User } from "../App";
+import ProfileDropdown from "./ProfileDropdown";
+import AuthModal from "./AuthModal";
 
 interface HeaderProps {
   user: User | null;
@@ -7,137 +9,147 @@ interface HeaderProps {
   onRegister: () => void;
   onLogout: () => void;
   onPayment: () => void;
+  onLoginSuccess: (user: User) => void;
 }
 
-export default function Header({ user, onLogin, onRegister, onLogout, onPayment }: HeaderProps) {
+export default function Header({
+  user,
+  onLogin,
+  onRegister,
+  onLogout,
+  onPayment,
+  onLoginSuccess,
+}: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   return (
-    <header className="bg-primary sticky top-0 z-50 py-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between h-20 px-4">
-          {/* Logo - Far Left */}
-          <div className="flex items-center">
-            <div className="logo relative">
-              <span className="casi text-white text-2xl md:text-4xl font-black">casi</span>
-              <span className="bom text-orange-500 text-2xl md:text-4xl font-black relative inline-block">
-                <span className="relative">
-                  b
-                  <span className="animate-blink inline-block transform-origin-center">
-                    o
-                  </span>
-                  <div className="smile absolute -bottom-1 left-0 w-full h-2 md:h-4 border-b-2 md:border-b-4 border-orange-600 rounded-b-full"></div>
-                </span>m
-              </span>
-            </div>
-          </div>
-
-          {/* Desktop Navigation - Center */}
-          <nav className="hidden md:flex items-center space-x-10">
-            <a href="#sports" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              SPOR
-            </a>
-            <a href="#live-betting" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              CANLI BAHIS
-            </a>
-            <a href="#casino" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              CASINO
-            </a>
-            <a href="#live-casino" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              CANLI CASİNO
-            </a>
-            <a href="#bonuses" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              BONUSLAR
-            </a>
-            <a href="#vip" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-              VIP PROGRAMI
-            </a>
-          </nav>
-
-          {/* User Section - Far Right */}
-          <div className="flex items-center space-x-2 md:space-x-4">
-            {user ? (
-              <div className="flex items-center space-x-1 md:space-x-3">
-                {/* Balance Button - White */}
-                <div className="bg-white text-black px-1 py-1 md:px-3 md:py-2 rounded-lg font-bold text-xs md:text-sm">
-                  ₺ {user.balance.toFixed(2)}
-                </div>
-                
-                {/* Deposit Button - Green */}
-                <button
-                  onClick={onPayment}
-                  className="bg-casino-green hover:bg-casino-green/90 text-white px-1 py-1 md:px-4 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-colors"
-                >
-                  PARA YATIR
-                </button>
-                
-                {/* Bomb Icon with Dropdown */}
-                <div className="relative">
-                  <button 
-                    onClick={onLogout}
-                    className="flex items-center space-x-1 text-white hover:text-gray-300 transition-colors"
-                  >
-                    <div className="w-5 h-5 md:w-8 md:h-8 bg-secondary rounded-full flex items-center justify-center border border-black">
-                      <span className="text-black font-bold text-xs md:text-lg">💣</span>
-                    </div>
-                    <i className="fas fa-chevron-down text-xs hidden md:block"></i>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-1 md:space-x-4">
-                <button
-                  onClick={onLogin}
-                  className="bg-white hover:bg-gray-100 text-black px-2 py-1 md:px-8 md:py-3 rounded-lg font-bold text-xs md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  GİRİŞ
-                </button>
-                <button 
-                  onClick={onRegister}
-                  className="bg-casino-bright-green hover:bg-casino-green text-white px-2 py-1 md:px-8 md:py-3 rounded-lg font-bold text-xs md:text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  ÜYE OL
-                </button>
-              </div>
-            )}
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-white"
-            >
-              <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'} text-2xl`}></i>
-            </button>
-          </div>
+    <header className="bg-primary sticky top-0 z-50 py-3 shadow-lg border-b border-gray-800">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-8">
+        {/* LOGO */}
+        <div className="flex items-center cursor-pointer select-none">
+          <span className="text-white text-3xl font-black">casi</span>
+          <span className="text-orange-500 text-3xl font-black relative">
+            b<span className="inline-block animate-pulse">o</span>m
+          </span>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-secondary/20 px-4">
-            <nav className="flex flex-col space-y-5">
-              <a href="#sports" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                SPOR
-              </a>
-              <a href="#live-betting" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                CANLI BAHIS
-              </a>
-              <a href="#casino" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                CASINO
-              </a>
-              <a href="#live-casino" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                CANLI CASİNO
-              </a>
-              <a href="#bonuses" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                BONUSLAR
-              </a>
-              <a href="#vip" className="text-white hover:text-secondary transition-colors font-bold text-lg">
-                VIP PROGRAMI
-              </a>
-            </nav>
-          </div>
-        )}
+        {/* ORTA MENÜ */}
+        <nav className="hidden md:flex items-center space-x-8">
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            SPOR
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CANLI BAHİS
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CASINO
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CANLI CASİNO
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            BONUSLAR
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            VIP PROGRAMI
+          </a>
+        </nav>
+
+        {/* SAĞ TARAF */}
+        <div className="flex items-center space-x-3 relative">
+          {user ? (
+            <div className="flex items-center space-x-3">
+              <div className="bg-white text-black px-3 py-1 rounded font-bold">
+                ₺ {user.balance.toFixed(2)}
+              </div>
+
+              <button
+                onClick={onPayment}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-lg transition"
+              >
+                PARA YATIR
+              </button>
+
+              <button
+                onClick={() => setShowProfileDropdown(true)}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-2 rounded-lg font-bold"
+              >
+                💣
+              </button>
+            </div>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => setShowAuth(!showAuth)}
+                className="bg-white hover:bg-gray-100 text-black font-bold px-5 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                GİRİŞ / ÜYE OL
+              </button>
+
+              {/* AuthModal */}
+              {showAuth && (
+                <AuthModal
+                  onClose={() => setShowAuth(false)}
+                  onSuccess={(user) => {
+                    onLoginSuccess(user);
+                    setShowAuth(false);
+                  }}
+                />
+              )}
+            </div>
+          )}
+
+          {/* Mobil Menü Butonu */}
+          <button
+            className="text-white text-2xl md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <i className={`fas ${isMenuOpen ? "fa-times" : "fa-bars"}`}></i>
+          </button>
+        </div>
       </div>
+
+      {/* MOBİL MENÜ */}
+      {isMenuOpen && (
+        <div className="bg-primary border-t border-gray-700 px-6 py-4 flex flex-col space-y-4 md:hidden">
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            SPOR
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CANLI BAHİS
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CASINO
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            CANLI CASİNO
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            BONUSLAR
+          </a>
+          <a href="#" className="text-white hover:text-yellow-400 font-semibold">
+            VIP PROGRAMI
+          </a>
+        </div>
+      )}
+
+      {/* PROFİL DROPDOWN */}
+      {showProfileDropdown && user && (
+        <ProfileDropdown
+          user={user}
+          onClose={() => setShowProfileDropdown(false)}
+          onLogout={() => {
+            setShowProfileDropdown(false);
+            onLogout();
+          }}
+          onPayment={() => {
+            setShowProfileDropdown(false);
+            onPayment();
+          }}
+        />
+      )}
     </header>
   );
 }
-

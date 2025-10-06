@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '../App';
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -23,11 +25,8 @@ export default function RegisterModal({ onClose, onSuccess, onSwitchToLogin }: R
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [attemptCount, setAttemptCount] = useState(0);
 
-  // Reset attempt count when modal opens
   useEffect(() => {
-    setAttemptCount(0);
     setError('');
   }, []);
 
@@ -54,270 +53,212 @@ export default function RegisterModal({ onClose, onSuccess, onSwitchToLogin }: R
       return;
     }
 
-    // İlk deneme hatası, ikinci deneme başarılı
-    if (attemptCount === 0) {
-      setAttemptCount(1);
-      setError('Sunucu hatası. Lütfen tekrar deneyin.');
-      setLoading(false);
-      return;
-    }
-
-    // İkinci deneme - başarılı kayıt
     try {
-      // Simulated successful registration
-      const userData = {
-        id: Date.now().toString(),
+      const docRef = await addDoc(collection(db, "users"), {
         username: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
-        password: formData.password, // Store password for login
-        balance: 100.00 // Starting balance
+        password: formData.password,
+        currency: formData.currency,
+        phone: `${formData.verificationCode}${formData.phone}`,
+        balance: 1000,
+        createdAt: serverTimestamp(),
+      });
+
+      const userData: User = {
+        id: docRef.id,
+        username: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        balance: 1000,
       };
 
-      // Store user in localStorage for login functionality
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      existingUsers.push(userData);
-      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSuccess('Kayıt başarılı! Giriş yapabilirsiniz.');
-      setError('');
+      localStorage.setItem("user", JSON.stringify(userData));
+      setSuccess("Kayıt başarılı! Giriş yapabilirsiniz.");
       setLoading(false);
 
-      // Redirect to login after successful registration
       setTimeout(() => {
-        onSwitchToLogin();
+        onSuccess(userData);
+        onClose();
       }, 2000);
-    } catch (error) {
-      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
+    } catch (err) {
+      console.error("🔥 Firebase kayıt hatası:", err);
+      setError("Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.");
       setLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="modal-overlay fixed top-20 right-4 z-50 p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md relative">
-        
-        {/* Close Button */}
+    <div className="absolute right-0 mt-2 w-[360px] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-6">
+      {/* Kapat Butonu */}
+      <button
+        onClick={onClose}
+        className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
+      >
+        <i className="fas fa-times text-lg"></i>
+      </button>
+
+      {/* Sekmeler */}
+      <div className="flex mb-4 pt-2">
         <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
+          onClick={onSwitchToLogin}
+          className="flex-1 py-2 text-white font-bold hover:bg-gray-800 transition-all duration-300 rounded-lg"
         >
-          <i className="fas fa-times text-xl"></i>
+          Giriş
         </button>
+        <button className="flex-1 py-2 text-white font-bold bg-casino-bright-green rounded-lg shadow-lg">
+          Üye Ol
+        </button>
+      </div>
 
-        {/* Header with Login/Signup tabs */}
-        <div className="flex mb-8">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Ad Soyad */}
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            name="firstName"
+            placeholder="Ad"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+          />
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Soyad"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
+            className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+          />
+        </div>
+
+        {/* Email */}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email adresiniz"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+        />
+
+        {/* Şifre */}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Casibom şifreniz"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400] pr-10"
+          />
           <button
-            onClick={onSwitchToLogin}
-            className="flex-1 py-3 px-4 text-white text-center font-bold bg-transparent hover:bg-gray-800 transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl"
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
           >
-            Giriş
-          </button>
-          <button className="flex-1 py-3 px-4 text-white text-center font-bold bg-casino-bright-green rounded-lg shadow-lg">
-            Üye Ol
+            <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Ad ve Soyad - Yan yana */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-white font-bold mb-2">
-                Ad
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-                placeholder="Ad"
-              />
-            </div>
-            <div>
-              <label className="block text-white font-bold mb-2">
-                Soyad
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-                placeholder="Soyad"
-              />
-            </div>
-          </div>
+        {/* Para birimi & Telefon */}
+        <div className="grid grid-cols-3 gap-3">
+          <select
+            name="currency"
+            value={formData.currency}
+            onChange={handleChange}
+            className="col-span-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+          >
+            <option value="TRY">TRY</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
 
-          {/* Email */}
-          <div>
-            <label className="block text-white font-bold mb-2">
-              Email
-            </label>
+          <select
+            name="verificationCode"
+            value={formData.verificationCode}
+            onChange={handleChange}
+            className="col-span-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+          >
+            <option value="+90">+90</option>
+            <option value="+1">+1</option>
+            <option value="+44">+44</option>
+          </select>
+
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Telefon"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+            className="col-span-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-[#ffb400]"
+          />
+        </div>
+
+        {/* Checkboxlar */}
+        <div className="space-y-2 text-sm text-white">
+          <label className="flex items-center space-x-2">
             <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-              placeholder="Email"
+              type="checkbox"
+              checked={ageVerified}
+              onChange={(e) => setAgeVerified(e.target.checked)}
+              className="w-4 h-4 text-[#ffb400] bg-white border-gray-300 rounded focus:ring-[#ffb400] focus:ring-2"
             />
-          </div>
+            <span>18 yaşından büyüğüm</span>
+          </label>
 
-          {/* Casibom Şifreniz ve Para birimi - Yan yana */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2">
-              <label className="block text-white font-bold mb-2">
-                Casibom Şifreniz
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500 pr-12"
-                  placeholder="Casibom Şifreniz"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-white font-bold mb-2">
-                Para birimi
-              </label>
-              <select
-                name="currency"
-                value={formData.currency}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-              >
-                <option value="TRY">TRY</option>
-                <option value="EUR">EUR</option>
-                <option value="BRL">BRL</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Onay Kodu ve Cep telefonu - Yan yana */}
-          <div className="grid grid-cols-4 gap-4">
-            <div>
-              <label className="block text-white font-bold mb-2">
-                Onay Kodu
-              </label>
-              <select
-                name="verificationCode"
-                value={formData.verificationCode}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-              >
-                <option value="+90">+90</option>
-                <option value="+1">+1</option>
-                <option value="+44">+44</option>
-              </select>
-            </div>
-            <div className="col-span-3">
-              <label className="block text-white font-bold mb-2">
-                Cep telefonu
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
-                placeholder="Telefon numarası"
-              />
-            </div>
-          </div>
-
-          {/* Checkboxes */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="ageVerification"
-                checked={ageVerified}
-                onChange={(e) => setAgeVerified(e.target.checked)}
-                className="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
-              />
-              <label htmlFor="ageVerification" className="text-white text-sm">
-                18 yaşından büyüğüm
-              </label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="termsAcceptance"
-                checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
-                className="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
-              />
-              <label htmlFor="termsAcceptance" className="text-white text-sm">
-                Kabul ediyorum{' '}
-                <span className="text-yellow-400 underline cursor-pointer hover:text-yellow-300">
-                  Hüküm ve Koşullar
-                </span>
-              </label>
-            </div>
-          </div>
-
-          {error && (
-            <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-500/20 border border-green-500 text-green-300 px-4 py-3 rounded-lg">
-              {success}
-            </div>
-          )}
-
-          {/* ÜYE OL Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-casino-gold hover:bg-casino-yellow text-black font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
-          >
-            {loading ? 'Kayıt olunuyor...' : attemptCount > 0 ? 'TEKRAR DENE' : 'ÜYE OL'}
-          </button>
-        </form>
-
-        {/* Hesabınız var mı? */}
-        <div className="mt-6 text-center">
-          <button
-            onClick={onSwitchToLogin}
-            className="text-yellow-400 underline hover:text-yellow-300 font-bold transition-colors"
-          >
-            Hesabınız var mı?
-          </button>
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="w-4 h-4 text-[#ffb400] bg-white border-gray-300 rounded focus:ring-[#ffb400] focus:ring-2"
+            />
+            <span>
+              Kabul ediyorum{" "}
+              <span className="text-yellow-400 underline hover:text-yellow-300 cursor-pointer">
+                Hüküm ve Koşullar
+              </span>
+            </span>
+          </label>
         </div>
+
+        {error && (
+          <div className="bg-red-800/30 border border-red-700 text-red-200 p-2 rounded text-center text-sm">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-800/30 border border-green-700 text-green-200 p-2 rounded text-center text-sm">
+            {success}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-casino-gold hover:bg-casino-yellow text-black font-bold py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-xl disabled:opacity-50"
+        >
+          {loading ? "Kayıt olunuyor..." : "ÜYE OL"}
+        </button>
+      </form>
+
+      <div className="mt-3 text-center">
+        <button
+          onClick={onSwitchToLogin}
+          className="text-yellow-400 underline hover:text-yellow-300 font-bold text-sm"
+        >
+          Hesabınız var mı? Giriş yapın
+        </button>
       </div>
     </div>
   );
 }
-
