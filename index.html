@@ -5,12 +5,64 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Casibom Casino - Türkiye'nin En Güvenilir Online Casino Platformu</title>
-    <meta name="description" content="Casibom Casino'da binlerce slot oyunu, canlı casino, spor bahisleri ve daha fazlası. Güvenli ödeme, hızlı çekim, 7/24 müşteri desteği." />
-    <meta name="keywords" content="casino, slot, bahis, canlı casino, casibom, online casino, türkiye" />
+
+    <meta
+      name="description"
+      content="Casibom Casino'da binlerce slot oyunu, canlı casino, spor bahisleri ve daha fazlası. Güvenli ödeme, hızlı çekim, 7/24 müşteri desteği."
+    />
+    <meta
+      name="keywords"
+      content="casino, slot, bahis, canlı casino, casibom, online casino, türkiye"
+    />
+
+    <!-- Mobil uyum & görünüm -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Casibom" />
+    <link rel="apple-touch-icon" href="/vite.svg" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        overscroll-behavior: none;
+      }
+
+      /* Mobil cihazlara özel temel düzen */
+      @media (max-width: 768px) {
+        body {
+          background-color: #000;
+        }
+
+        #root {
+          padding-bottom: 70px; /* Alt menü için boşluk */
+        }
+      }
+
+      /* Scroll görünümünü sadeleştir */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #666;
+      }
+    </style>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

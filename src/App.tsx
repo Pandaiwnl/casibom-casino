@@ -67,7 +67,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-primary text-white relative flex flex-col">
-      {/* Üst header */}
+      {/* HEADER */}
       <Header 
         user={user} 
         onLogin={() => setShowLogin(true)}
@@ -76,16 +76,17 @@ function App() {
         onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
       />
 
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      {/* MAIN CONTENT */}
+      <main className="flex-1 overflow-y-auto pb-24 md:pb-0">
         <HeroCarousel 
           onRegister={() => setShowRegister(true)} 
           onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
         />
         
-        <section className="bg-primary py-4 text-center">
+        <section className="bg-primary py-4 text-center px-2">
           <p className="text-white text-sm">
-            Güncel adresimiz için: 
-            <span className="text-secondary ml-2">
+            Güncel adresimiz için:
+            <span className="text-secondary ml-2 break-all">
               <i className="fab fa-telegram mr-1"></i>
               t.me/casibomadres linkini kullanınız
             </span>
@@ -97,7 +98,10 @@ function App() {
         <GamesGrid onGameClick={handleGameClick} />
       </main>
 
-      <Footer />
+      {/* FOOTER (masaüstü) */}
+      <div className="hidden md:block">
+        <Footer />
+      </div>
 
       {/* MODALLAR */}
       {showLogin && (
@@ -130,26 +134,26 @@ function App() {
         />
       )}
 
-      {/* Mobil alt menü (navbar) */}
+      {/* MOBİL ALT MENÜ */}
       {!isModalOpen && (
         <div className="fixed bottom-0 left-0 w-full bg-[#111] text-white border-t border-gray-700 flex justify-around py-3 md:hidden z-50">
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <FaFutbol className="text-xl mb-1" />
             Spor
           </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <GiCardAceHearts className="text-xl mb-1" />
             Casino
           </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <FaHeadset className="text-xl mb-1" />
             Canlı Destek
           </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <FaUserFriends className="text-xl mb-1" />
             Canlı Casino
           </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
             <HiMenu className="text-xl mb-1" />
             Menü
           </button>
