@@ -35,21 +35,7 @@ export default function HeroCarousel({ onPayment }: HeroCarouselProps) {
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/30"></div>
           
-          {/* Mobile Content */}
-          <div className="relative h-full flex items-center justify-center">
-            <div className="text-center text-white">
-              <div className="text-4xl font-black mb-2">1000TL</div>
-              <div className="text-sm font-bold mb-4">PERŞEMBE/PAZAR</div>
-              <div className="flex gap-2 justify-center">
-                <button className="bg-yellow-500 text-black px-4 py-2 rounded font-bold text-sm">
-                  DETAYLAR
-                </button>
-                <button className="border-2 border-purple-500 text-white px-4 py-2 rounded font-bold text-sm">
-                  KRİPTO BONUSU
-                </button>
-              </div>
-            </div>
-          </div>
+          {/* Mobile Content - Removed text overlay */}
 
           {/* Carousel Indicators */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2" data-testid="carousel-indicators">
