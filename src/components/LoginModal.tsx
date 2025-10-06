@@ -1,50 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User } from '../App';
 
-interface LoginModalProps {
+interface RegisterModalProps {
   onClose: () => void;
   onSuccess: (user: User) => void;
-  onSwitchToRegister: () => void;
+  onSwitchToLogin: () => void;
 }
 
-export default function LoginModal({ onClose, onSuccess, onSwitchToRegister }: LoginModalProps) {
+export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterModalProps) {
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
-    password: ''
+    password: '',
+    currency: 'TRY',
+    verificationCode: '+90',
+    phone: ''
   });
+
+  const [ageVerified, setAgeVerified] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [attemptCount, setAttemptCount] = useState(0);
+
+  useEffect(() => {
+    setAttemptCount(0);
+    setError('');
+    setSuccess('');
+  }, []);
+
+  // Şifre Güç Kontrolü
+  const isPasswordStrong = (password: string) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    return regex.test(password);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
+
+    if (!ageVerified) {
+      setError('18 yaşından büyük olduğunuzu onaylamalısınız');
+      setLoading(false);
+      return;
+    }
+
+    if (!termsAccepted) {
+      setError('Hüküm ve Koşulları kabul etmelisiniz');
+      setLoading(false);
+      return;
+    }
+
+    if (!isPasswordStrong(formData.password)) {
+      setError('Şifre en az 8 karakter olmalı, bir harf, bir sayı ve bir özel karakter içermelidir.');
+      setLoading(false);
+      return;
+    }
+
+    if (attemptCount === 0) {
+      setAttemptCount(1);
+      setError('Sunucu hatası. Lütfen tekrar deneyin.');
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const data = await response.json();
+      // Kullanıcı oluşturma (örnek)
+      const userData = {
+        id: Date.now().toString(),
+        username: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        balance: 100.00
+      };
 
-      if (response.ok) {
-        onSuccess(data.user);
-      } else {
-        setShowErrorModal(true);
-      }
+      setSuccess('Kayıt başarılı! Giriş yapabilirsiniz.');
+      setError('');
+      setLoading(false);
+
+      // Otomatik giriş yapmadan sadece başarılı kayıt bildirimi
+      setTimeout(() => {
+        onSwitchToLogin(); // Giriş ekranına yönlendir
+      }, 2000);
     } catch (error) {
-      setShowErrorModal(true);
-    } finally {
+      setError('Bir hata oluştu. Lütfen tekrar deneyin.');
       setLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -52,64 +102,153 @@ export default function LoginModal({ onClose, onSuccess, onSwitchToRegister }: L
   };
 
   return (
-    <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="bg-primary border border-secondary/20 rounded-xl p-8 w-full max-w-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-black text-white">Giriş Yap</h2>
+    <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-gray-900 border border-gray-700 rounded-xl p-8 w-full max-w-md">
+        
+        {/* Header */}
+        <div className="flex mb-8">
           <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            onClick={onSwitchToLogin}
+            className="flex-1 py-3 px-4 text-white font-bold hover:bg-gray-800 transition-colors"
           >
-            <i className="fas fa-times text-xl"></i>
+            Giriş
+          </button>
+          <button className="flex-1 py-3 px-4 text-white font-bold bg-green-600 rounded-lg">
+            Üye Ol
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-white font-bold mb-2">Ad</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
+                placeholder="Ad"
+              />
+            </div>
+            <div>
+              <label className="block text-white font-bold mb-2">Soyad</label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
+                placeholder="Soyad"
+              />
+            </div>
+          </div>
+
           <div>
-            <label className="block text-white font-bold mb-2">
-              Email
-            </label>
+            <label className="block text-white font-bold mb-2">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-secondary"
-              placeholder="E-posta adresinizi girin"
+              className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
+              placeholder="Email"
             />
-            <div className="mt-2">
-              <button
-                type="button"
-                onClick={onSwitchToRegister}
-                className="text-yellow-400 underline hover:text-yellow-300 text-sm transition-colors"
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <label className="block text-white font-bold mb-2">Casibom Şifreniz</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500 pr-12"
+                  placeholder="Casibom Şifreniz"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-white font-bold mb-2">Para birimi</label>
+              <select
+                name="currency"
+                value={formData.currency}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
               >
-                Kayıt
-              </button>
+                <option value="TRY">TRY</option>
+                <option value="EUR">EUR</option>
+                <option value="BRL">BRL</option>
+              </select>
             </div>
           </div>
 
-          <div>
-            <label className="block text-white font-bold mb-2">
-              Casibom Şifreniz
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-secondary"
-              placeholder="Şifrenizi girin"
-            />
-            <div className="mt-2">
-              <button
-                type="button"
-                onClick={onSwitchToRegister}
-                className="text-yellow-400 underline hover:text-yellow-300 text-sm transition-colors"
+          <div className="grid grid-cols-4 gap-4">
+            <div>
+              <label className="block text-white font-bold mb-2">Onay</label>
+              <select
+                name="verificationCode"
+                value={formData.verificationCode}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900"
               >
-                Şifrenizi mi unuttunuz?
-              </button>
+                <option value="+90">+90</option>
+                <option value="+1">+1</option>
+                <option value="+44">+44</option>
+              </select>
+            </div>
+
+            <div className="col-span-3">
+              <label className="block text-white font-bold mb-2">Cep telefonu</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-white border rounded-lg text-gray-900 focus:outline-none focus:border-green-500"
+                placeholder="Telefon numarası"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={ageVerified}
+                onChange={(e) => setAgeVerified(e.target.checked)}
+                className="w-4 h-4 text-green-600 rounded"
+              />
+              <label className="text-white text-sm">18 yaşından büyüğüm</label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="w-4 h-4 text-green-600 rounded"
+              />
+              <label className="text-white text-sm">
+                Kabul ediyorum{' '}
+                <span className="text-yellow-400 underline cursor-pointer">
+                  Hüküm ve Koşullar
+                </span>
+              </label>
             </div>
           </div>
 
@@ -119,70 +258,30 @@ export default function LoginModal({ onClose, onSuccess, onSwitchToRegister }: L
             </div>
           )}
 
+          {success && (
+            <div className="bg-green-500/20 border border-green-500 text-green-300 px-4 py-3 rounded-lg">
+              {success}
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-secondary hover:bg-secondary/90 text-primary font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
           >
-            {loading ? 'Giriş yapılıyor...' : 'GİRİŞ YAP'}
+            {loading ? 'Kayıt olunuyor...' : attemptCount > 0 ? 'TEKRAR DENE' : 'ÜYE OL'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-300">
-            Hesabınız yok mu?{' '}
-            <button
-              onClick={onSwitchToRegister}
-              className="text-secondary hover:text-secondary/80 font-bold transition-colors"
-            >
-              Üye Ol
-            </button>
-          </p>
+          <button
+            onClick={onSwitchToLogin}
+            className="text-yellow-400 underline hover:text-yellow-300 font-bold"
+          >
+            Hesabınız var mı?
+          </button>
         </div>
       </div>
-
-      {/* Error Modal */}
-      {showErrorModal && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
-          <div className="bg-black/80 backdrop-blur-sm absolute inset-0" onClick={() => setShowErrorModal(false)}></div>
-          <div className="relative bg-gray-900 rounded-lg overflow-hidden shadow-2xl max-w-sm w-full">
-            {/* Orange Header */}
-            <div className="bg-orange-500 px-6 py-4 flex justify-between items-center">
-              <h3 className="text-white font-bold text-lg">Giriş Hatası</h3>
-              <button
-                onClick={() => setShowErrorModal(false)}
-                className="text-white hover:text-gray-200 transition-colors"
-              >
-                <i className="fas fa-times text-xl"></i>
-              </button>
-            </div>
-            
-            {/* Content */}
-            <div className="px-6 py-8 text-center">
-              {/* Warning Icon */}
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center">
-                  <i className="fas fa-exclamation text-white text-2xl"></i>
-                </div>
-              </div>
-              
-              {/* Error Message */}
-              <p className="text-white text-lg mb-6">
-                Giriş bilgileriniz hatalı, lütfen kontrol ediniz
-              </p>
-              
-              {/* Close Button */}
-              <button
-                onClick={() => setShowErrorModal(false)}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors"
-              >
-                KAPAT
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
-
