@@ -8,9 +8,7 @@ import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import PaymentModal from './components/PaymentModal';
-import { FaFutbol, FaHeadset, FaUserFriends } from 'react-icons/fa';
-import { GiCardAceHearts } from 'react-icons/gi';
-import { HiMenu } from 'react-icons/hi';
+import BottomNav from './components/BottomNav';
 
 export interface User {
   id: string;
@@ -90,7 +88,7 @@ function App() {
       />
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-y-auto pb-24 md:pb-0">
+      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <HeroCarousel 
           onRegister={() => setShowRegister(true)} 
           onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
@@ -125,30 +123,7 @@ function App() {
       )}
 
       {/* MOBİL ALT MENÜ */}
-      {!isModalOpen && (
-        <div className="fixed bottom-0 left-0 w-full bg-[#111] text-white border-t border-gray-700 flex justify-around py-3 md:hidden z-50">
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <FaFutbol className="text-xl mb-1" />
-            SPOR
-          </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <span className="text-2xl mb-1">7</span>
-            CASİNO
-          </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <FaHeadset className="text-xl mb-1" />
-            CANLI DESTEK
-          </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <span className="text-xl mb-1">🎰</span>
-            CANLI CASİNO
-          </button>
-          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400 transition">
-            <HiMenu className="text-xl mb-1" />
-            MENÜ
-          </button>
-        </div>
-      )}
+      {!isModalOpen && <BottomNav />}
     </div>
   );
 }
