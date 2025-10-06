@@ -7,7 +7,7 @@ interface RegisterModalProps {
   onSwitchToLogin: () => void;
 }
 
-export default function RegisterModal({ onClose, onSwitchToLogin }: RegisterModalProps) {
+export default function RegisterModal({ onClose, onSuccess, onSwitchToLogin }: RegisterModalProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

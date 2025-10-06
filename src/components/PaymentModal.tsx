@@ -9,10 +9,10 @@ type UserLike = {
 interface PaymentModalProps {
   onClose: () => void;
   user?: UserLike | null;
-  onDeposit?: (amount: number) => void;
+  onSuccess?: (newBalance: number) => void;
 }
 
-export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalProps) {
+export default function PaymentModal({ onClose, user, onSuccess }: PaymentModalProps) {
   const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw' | 'history' | 'loss'>('deposit');
   const [bonus, setBonus] = useState("Bonus istemiyorum.");
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
@@ -82,7 +82,10 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      onDeposit?.(value);
+      if (user && onSuccess) {
+        const newBalance = user.balance + value;
+        onSuccess(newBalance);
+      }
       setMessage("Para yatırma işlemi başarılı!");
       setDepositAmount("");
     }, 1000);
