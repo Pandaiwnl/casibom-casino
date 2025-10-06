@@ -77,12 +77,12 @@ export default function LoginModal({ onClose, onSuccess, onSwitchToRegister }: L
 
         {/* Header */}
         <div className="flex mb-6">
-          <button className="flex-1 py-3 px-4 text-white font-bold bg-green-600 rounded-lg">
+          <button className="flex-1 py-3 px-4 text-white font-bold bg-casino-bright-green rounded-lg shadow-lg">
             Giriş
           </button>
           <button
             onClick={onSwitchToRegister}
-            className="flex-1 py-3 px-4 text-white font-bold hover:bg-gray-800 transition-colors"
+            className="flex-1 py-3 px-4 text-white font-bold hover:bg-gray-800 transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl"
           >
             Üye Ol
           </button>
@@ -133,7 +133,7 @@ export default function LoginModal({ onClose, onSuccess, onSwitchToRegister }: L
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-casino-gold hover:bg-casino-yellow text-black font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
           >
             {loading ? 'Giriş yapılıyor...' : 'GİRİŞ YAP'}
           </button>

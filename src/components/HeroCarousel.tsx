@@ -18,8 +18,8 @@ export default function HeroCarousel({ onPayment }: HeroCarouselProps) {
   }, []);
 
   return (
-    <section className="relative">
-      <div className="relative h-[500px] lg:h-[600px] overflow-hidden">
+    <section className="relative px-1">
+      <div className="relative h-[500px] lg:h-[600px] overflow-hidden w-full mx-auto rounded-lg shadow-2xl">
         {/* Background Image */}
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat cursor-pointer"

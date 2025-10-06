@@ -7,17 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#000000',
+        primary: '#0a0a0a',
         secondary: '#ffd700',
         accent: '#00ff00',
         'accent-foreground': '#ffffff',
-        'casino-red': '#ff0000',
-        'casino-green': '#00ff00',
-        'casino-orange': '#ff8c00',
+        'casino-red': '#ff4444',
+        'casino-green': '#00cc44',
+        'casino-orange': '#ff9500',
         'casino-yellow': '#ffd700',
-        'casino-blue': '#0066cc',
-        'casino-dark-green': '#1B5E20',
-        'casino-orange-dark': '#F57C00',
+        'casino-blue': '#0088ff',
+        'casino-dark-green': '#00aa33',
+        'casino-orange-dark': '#ff7700',
+        'casino-bright-green': '#00ff66',
+        'casino-gold': '#ffcc00',
+        'casino-silver': '#c0c0c0',
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',

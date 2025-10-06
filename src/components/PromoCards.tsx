@@ -1,11 +1,11 @@
 export default function PromoCards() {
   return (
     <section className="py-8 bg-primary" id="promotions">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-6">
+      <div className="max-w-[92rem] mx-auto px-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {/* Telegram Card - Left Side, Wide */}
           <div 
-            className="promo-card relative overflow-hidden rounded-xl h-48 flex-1"
+            className="promo-card relative overflow-hidden rounded-xl h-48 md:col-span-1 order-1"
             data-testid="card-telegram"
           >
             <img 
@@ -25,13 +25,11 @@ export default function PromoCards() {
             </div>
           </div>
 
-          {/* VIP and Mobile Cards - Right Side, Side by Side */}
-          <div className="flex flex-col md:flex-row gap-4 flex-1">
-            {/* VIP Program Card */}
-            <div 
-              className="promo-card relative overflow-hidden rounded-xl cursor-pointer h-48 flex-1"
-              data-testid="card-vip"
-            >
+          {/* VIP Program Card - Center */}
+          <div 
+            className="promo-card relative overflow-hidden rounded-xl cursor-pointer h-48 md:col-span-1 order-2"
+            data-testid="card-vip"
+          >
               <img 
                 src="/images/vip.jpg" 
                 alt="VIP Program" 
@@ -50,13 +48,13 @@ export default function PromoCards() {
                   </div>
                 </div>
               </div>
-            </div>
+          </div>
 
-            {/* Mobile App Card */}
-            <div 
-              className="promo-card relative overflow-hidden rounded-xl h-48 flex-1"
-              data-testid="card-mobile"
-            >
+          {/* Mobile App Card - Right */}
+          <div 
+            className="promo-card relative overflow-hidden rounded-xl h-48 md:col-span-1 order-3"
+            data-testid="card-mobile"
+          >
               <img 
                 src="/images/mobil.jpg" 
                 alt="Mobile App" 
@@ -70,7 +68,6 @@ export default function PromoCards() {
                   </div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </div>

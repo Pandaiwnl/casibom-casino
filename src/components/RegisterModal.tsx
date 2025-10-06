@@ -118,11 +118,11 @@ export default function RegisterModal({ onClose, onSwitchToLogin }: RegisterModa
         <div className="flex mb-8">
           <button
             onClick={onSwitchToLogin}
-            className="flex-1 py-3 px-4 text-white text-center font-bold bg-transparent hover:bg-gray-800 transition-colors"
+            className="flex-1 py-3 px-4 text-white text-center font-bold bg-transparent hover:bg-gray-800 transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl"
           >
             Giriş
           </button>
-          <button className="flex-1 py-3 px-4 text-white text-center font-bold bg-green-600 rounded-lg">
+          <button className="flex-1 py-3 px-4 text-white text-center font-bold bg-casino-bright-green rounded-lg shadow-lg">
             Üye Ol
           </button>
         </div>
@@ -301,7 +301,7 @@ export default function RegisterModal({ onClose, onSwitchToLogin }: RegisterModa
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-casino-gold hover:bg-casino-yellow text-black font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
           >
             {loading ? 'Kayıt olunuyor...' : attemptCount > 0 ? 'TEKRAR DENE' : 'ÜYE OL'}
           </button>
