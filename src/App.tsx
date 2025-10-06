@@ -8,6 +8,9 @@ import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import PaymentModal from './components/PaymentModal';
+import { FaFutbol, FaHeadset, FaUserFriends } from 'react-icons/fa';
+import { GiCardAceHearts } from 'react-icons/gi';
+import { HiMenu } from 'react-icons/hi';
 
 export interface User {
   id: string;
@@ -23,7 +26,7 @@ function App() {
   const [showPayment, setShowPayment] = useState(false);
   const [, setSelectedGame] = useState<string | null>(null);
 
-  // Kullanıcı oturum kontrolü
+  // Check for existing user session
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -43,7 +46,10 @@ function App() {
   };
 
   const handleGameClick = (gameId: string) => {
-    setShowRegister(true);
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
     setSelectedGame(gameId);
   };
 
@@ -57,43 +63,43 @@ function App() {
     setSelectedGame(null);
   };
 
+  const isModalOpen = showLogin || showRegister || showPayment;
+
   return (
-    <div className="min-h-screen bg-primary text-white relative pb-16 md:pb-0">
+    <div className="min-h-screen bg-primary text-white relative flex flex-col">
+      {/* Üst header */}
       <Header 
         user={user} 
         onLogin={() => setShowLogin(true)}
         onRegister={() => setShowRegister(true)}
         onLogout={handleLogout}
-        onPayment={() => setShowPayment(true)}
+        onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
       />
-      
-      <main>
+
+      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <HeroCarousel 
           onRegister={() => setShowRegister(true)} 
-          onPayment={() => setShowPayment(true)}
+          onPayment={() => user ? setShowPayment(true) : setShowLogin(true)}
         />
         
-        {/* Adres Bölümü */}
-        <section className="bg-primary py-4">
-          <div className="max-w-7xl mx-auto px-4 text-center">
-            <p className="text-white text-sm">
-              Güncel adresimiz için: 
-              <span className="text-secondary ml-2">
-                <i className="fab fa-telegram mr-1"></i>
-                t.me/casibomadres linkini kullanınız
-              </span>
-            </p>
-          </div>
+        <section className="bg-primary py-4 text-center">
+          <p className="text-white text-sm">
+            Güncel adresimiz için: 
+            <span className="text-secondary ml-2">
+              <i className="fab fa-telegram mr-1"></i>
+              t.me/casibomadres linkini kullanınız
+            </span>
+          </p>
         </section>
         
         <PromoCards />
         <WinnersSection />
         <GamesGrid onGameClick={handleGameClick} />
       </main>
-      
+
       <Footer />
 
-      {/* Modallar */}
+      {/* MODALLAR */}
       {showLogin && (
         <LoginModal 
           onClose={() => setShowLogin(false)}
@@ -104,7 +110,7 @@ function App() {
           }}
         />
       )}
-      
+
       {showRegister && (
         <RegisterModal 
           onClose={() => setShowRegister(false)}
@@ -115,7 +121,7 @@ function App() {
           }}
         />
       )}
-      
+
       {showPayment && (
         <PaymentModal 
           onClose={() => setShowPayment(false)}
@@ -124,38 +130,31 @@ function App() {
         />
       )}
 
-      {/* 📱 Mobil Alt Menü */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-[#2a2a2a] flex justify-around items-center py-2 md:hidden">
-        {/* Spor */}
-        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
-          <i className="fas fa-futbol text-lg mb-1"></i>
-          <span className="text-xs font-semibold">SPOR</span>
-        </button>
-
-        {/* Casino */}
-        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
-          <i className="fas fa-dice text-lg mb-1"></i>
-          <span className="text-xs font-semibold">CASİNO</span>
-        </button>
-
-        {/* Canlı Destek */}
-        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
-          <i className="fas fa-comments text-lg mb-1"></i>
-          <span className="text-xs font-semibold">CANLI DESTEK</span>
-        </button>
-
-        {/* Canlı Casino */}
-        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
-          <i className="fas fa-user-tie text-lg mb-1"></i>
-          <span className="text-xs font-semibold">CANLI CASİNO</span>
-        </button>
-
-        {/* Menü */}
-        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
-          <i className="fas fa-bars text-lg mb-1"></i>
-          <span className="text-xs font-semibold">MENÜ</span>
-        </button>
-      </div>
+      {/* Mobil alt menü (navbar) */}
+      {!isModalOpen && (
+        <div className="fixed bottom-0 left-0 w-full bg-[#111] text-white border-t border-gray-700 flex justify-around py-3 md:hidden z-50">
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+            <FaFutbol className="text-xl mb-1" />
+            Spor
+          </button>
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+            <GiCardAceHearts className="text-xl mb-1" />
+            Casino
+          </button>
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+            <FaHeadset className="text-xl mb-1" />
+            Canlı Destek
+          </button>
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+            <FaUserFriends className="text-xl mb-1" />
+            Canlı Casino
+          </button>
+          <button className="flex flex-col items-center text-xs opacity-90 hover:text-yellow-400">
+            <HiMenu className="text-xl mb-1" />
+            Menü
+          </button>
+        </div>
+      )}
     </div>
   );
 }
