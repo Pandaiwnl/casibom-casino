@@ -7,7 +7,7 @@ interface RegisterModalProps {
   onSwitchToLogin: () => void;
 }
 
-export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterModalProps) {
+export default function RegisterModal({ onClose, onSwitchToLogin }: RegisterModalProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,6 +22,7 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [attemptCount, setAttemptCount] = useState(0);
 
   // Reset attempt count when modal opens
@@ -68,13 +69,26 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
         id: Date.now().toString(),
         username: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
+        password: formData.password, // Store password for login
         balance: 100.00 // Starting balance
       };
+
+      // Store user in localStorage for login functionality
+      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      existingUsers.push(userData);
+      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
 
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      onSuccess(userData);
+      setSuccess('Kayıt başarılı! Giriş yapabilirsiniz.');
+      setError('');
+      setLoading(false);
+
+      // Redirect to login after successful registration
+      setTimeout(() => {
+        onSwitchToLogin();
+      }, 2000);
     } catch (error) {
       setError('Bir hata oluştu. Lütfen tekrar deneyin.');
       setLoading(false);
@@ -89,8 +103,17 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
   };
 
   return (
-    <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-gray-900 border border-gray-700 rounded-xl p-8 w-full max-w-md">
+    <div className="modal-overlay fixed top-20 right-4 z-50 p-4">
+      <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md relative">
+        
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
+        >
+          <i className="fas fa-times text-xl"></i>
+        </button>
+
         {/* Header with Login/Signup tabs */}
         <div className="flex mb-8">
           <button
@@ -265,6 +288,12 @@ export default function RegisterModal({ onSuccess, onSwitchToLogin }: RegisterMo
           {error && (
             <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/20 border border-green-500 text-green-300 px-4 py-3 rounded-lg">
+              {success}
             </div>
           )}
 
