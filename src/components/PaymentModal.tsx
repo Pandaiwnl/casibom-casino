@@ -17,11 +17,12 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
   const [bonus, setBonus] = useState("Bonus istemiyorum.");
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [depositAmount, setDepositAmount] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [methodsOverlayOpen, setMethodsOverlayOpen] = useState(false);
 
-  // Ödeme görselleri public/odeme-yontemleri klasöründen yüklenir
   const [paymentImages, setPaymentImages] = useState<{ id: string; src: string; alt: string; limit?: string }[]>([]);
 
   useEffect(() => {
@@ -50,30 +51,63 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
     setPaymentImages(methods.map((m, idx) => ({ id: String(idx + 1), ...m })));
   }, []);
 
+  const selected = selectedMethod ? paymentImages.find(p => p.id === selectedMethod) : null;
+
+  // limit'i parse et: ₺200 - ₺5.000.000 → [200, 5000000]
+  const parseLimit = (limit?: string) => {
+    if (!limit) return [0, Infinity];
+    const match = limit.match(/₺([\d.,]+)\s*-\s*₺([\d.,]+)/);
+    if (!match) return [0, Infinity];
+    const min = parseFloat(match[1].replace(/[.,]/g, "").slice(0, -2)) || 0;
+    const max = parseFloat(match[2].replace(/[.,]/g, "").slice(0, -2)) || Infinity;
+    return [min, max];
+  };
+
+  const [minLimit, maxLimit] = parseLimit(selected?.limit);
+
+  const validateAmount = (amount: string) => {
+    const value = parseFloat(amount);
+    if (!selected || isNaN(value)) return setError(null);
+    if (value < minLimit) setError(`Minimum limit ₺${minLimit.toLocaleString("tr-TR")}`);
+    else if (value > maxLimit) setError(`Maksimum limit ₺${maxLimit.toLocaleString("tr-TR")}`);
+    else setError(null);
+  };
+
   const handleDeposit = () => {
-    if (!selectedMethod) {
-      setMessage("Lütfen bir ödeme yöntemi seçin.");
-      return;
-    }
-    if (!depositAmount || parseFloat(depositAmount) <= 0) {
-      setMessage("Geçerli bir miktar girin.");
-      return;
-    }
+    if (!selected) return setMessage("Lütfen bir ödeme yöntemi seçin.");
+    const value = parseFloat(depositAmount);
+    if (isNaN(value) || value < minLimit || value > maxLimit)
+      return setMessage("Lütfen geçerli bir miktar girin (limit aralığında).");
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      onDeposit?.(parseFloat(depositAmount));
+      onDeposit?.(value);
       setMessage("Para yatırma işlemi başarılı!");
       setDepositAmount("");
+    }, 1000);
+  };
+
+  const handleWithdraw = () => {
+    if (!selected) return setMessage("Lütfen bir para çekme yöntemi seçin.");
+    const value = parseFloat(withdrawAmount);
+    if (isNaN(value) || value < minLimit || value > maxLimit)
+      return setMessage("Lütfen geçerli bir miktar girin (limit aralığında).");
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setMessage("Para çekme talebiniz alındı!");
+      setWithdrawAmount("");
     }, 1000);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
       <div className="w-full max-w-4xl bg-[#111] rounded-lg overflow-hidden shadow-xl">
-        {/* Üst Başlık */}
+        {/* Üst Bar */}
         <div className="bg-[#ffb400] flex items-center justify-between px-4 py-3">
-          <h2 className="text-black font-bold">PARA YATIR</h2>
+          <div />
           <button onClick={onClose} className="text-black text-2xl font-bold">✕</button>
         </div>
 
@@ -87,7 +121,11 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
           ].map((t) => (
             <button
               key={t.key}
-              onClick={() => setActiveTab(t.key as any)}
+              onClick={() => {
+                setActiveTab(t.key as any);
+                setMessage(null);
+                setError(null);
+              }}
               className={`pb-3 -mb-px border-b-2 ${
                 activeTab === t.key ? 'text-white border-[#ffb400]' : 'border-transparent hover:text-white'
               }`}
@@ -105,8 +143,10 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
             </div>
           )}
 
+          {/* PARA YATIR */}
           {activeTab === "deposit" && (
             <div>
+              {/* Adım 1 */}
               <div className="text-center mb-6">
                 <h3 className="text-[#ffb400] font-bold text-lg mb-2">Adım 1</h3>
                 <p className="mb-4">Bonus seç</p>
@@ -125,6 +165,7 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
 
               {/* Adım 2 */}
               <div className="grid md:grid-cols-2 gap-6">
+                {/* Sol */}
                 <div>
                   <h3 className="text-center text-[#ffb400] font-bold text-lg mb-2">Adım 2</h3>
                   <p className="text-center mb-4">Ödeme yöntemi seç</p>
@@ -133,36 +174,49 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
                     onClick={() => setMethodsOverlayOpen(true)}
                     className="bg-transparent border border-gray-600 text-white rounded-lg px-4 py-3 w-full flex items-center justify-between"
                   >
-                    <span>{selectedMethod ? selectedMethod : "Tüm yöntemleri göster"}</span>
+                    {selected ? (
+                      <div className="flex items-center gap-3">
+                        <div className="bg-white rounded-md p-1 w-28 h-10 flex items-center justify-center">
+                          <img src={selected.src} alt={selected.alt} className="max-h-8 object-contain" />
+                        </div>
+                      </div>
+                    ) : (
+                      <span>Tüm yöntemleri göster</span>
+                    )}
                     <span>▾</span>
                   </button>
 
                   <div className="mt-6 text-sm text-gray-300">
                     <div>Limitler</div>
-                    <div className="text-gray-400 mt-2">---</div>
+                    <div className="text-gray-400 mt-2">{selected?.limit || '---'}</div>
                   </div>
                 </div>
 
-                {/* Sağ taraf - para yatır */}
+                {/* Sağ */}
                 <div className="flex items-center justify-center">
                   <div className="text-center space-y-4">
-                    {selectedMethod && (
+                    {selected && (
                       <div className="max-w-xs">
                         <label className="block text-left text-sm mb-2">Yatırılacak miktar (₺)</label>
                         <input
                           type="number"
-                          min="0"
+                          min={minLimit}
+                          max={maxLimit}
                           step="0.01"
                           value={depositAmount}
-                          onChange={(e) => setDepositAmount(e.target.value)}
+                          onChange={(e) => {
+                            setDepositAmount(e.target.value);
+                            validateAmount(e.target.value);
+                          }}
                           className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none"
-                          placeholder="Örn: 100"
+                          placeholder={`Min ₺${minLimit.toLocaleString("tr-TR")}`}
                         />
+                        {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
                       </div>
                     )}
 
                     <button
-                      disabled={loading || !selectedMethod}
+                      disabled={loading || !selected}
                       onClick={handleDeposit}
                       className="bg-white text-black font-bold py-3 px-10 rounded-lg hover:bg-gray-200 disabled:opacity-50"
                     >
@@ -174,31 +228,87 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
             </div>
           )}
 
-          {activeTab !== "deposit" && (
-            <div className="py-12 text-center text-gray-400">
-              {activeTab === "history" || activeTab === "loss" ? (
-                <div className="bg-red-800/20 border border-red-600 text-red-300 inline-block px-6 py-4 rounded-lg">
-                  Bir hata oluştu. Lütfen daha sonra tekrar deneyin.
+          {/* PARA ÇEKME */}
+          {activeTab === "withdraw" && (
+            <div className="md:grid md:grid-cols-2 md:gap-8 text-white">
+              {/* Sol */}
+              <div className="mb-6 md:mb-0">
+                <div className="text-center mb-2">
+                  <div className="text-sm text-gray-300">Çekilebilir</div>
+                  <div className="text-yellow-400 font-bold mt-1">
+                    ₺ {user ? user.balance.toFixed(2) : "0,00"}
+                  </div>
                 </div>
-              ) : (
-                "Bu sekme yakında aktif olacak."
-              )}
+
+                <h3 className="text-[#ffb400] font-bold text-lg mt-2 mb-3 text-center">Adım 1</h3>
+                <p className="text-center mb-3">Para çekme yöntemi seç</p>
+
+                <div className="max-w-md mx-auto">
+                  <button
+                    type="button"
+                    onClick={() => setMethodsOverlayOpen(true)}
+                    className="bg-transparent border border-gray-500 rounded-lg py-3 px-4 w-full flex items-center justify-between text-white hover:border-[#ffb400]/80 transition-colors"
+                  >
+                    <span>{selected ? selected.alt : "Tüm yöntemleri göster"}</span>
+                    <i className="fas fa-chevron-down"></i>
+                  </button>
+
+                  <div className="mt-4">
+                    <div className="text-sm text-gray-400 mb-1">Limitler</div>
+                    <div className="text-gray-500">{selected?.limit || "---"}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sağ */}
+              <div className="flex flex-col items-center justify-center md:border-l md:border-white/10">
+                <div className="text-center mb-2">
+                  <div className="text-sm text-gray-300">Toplam Bakiye</div>
+                  <div className="text-yellow-400 font-bold mt-1">
+                    ₺ {user ? user.balance.toFixed(2) : "0,00"}
+                  </div>
+                </div>
+
+                <h3 className="text-[#ffb400] font-bold text-lg mt-2 mb-3">Adım 2</h3>
+                <p className="mb-4 text-white/90">Para çekme miktarını girin.</p>
+
+                <input
+                  type="number"
+                  min={minLimit}
+                  max={maxLimit}
+                  step="0.01"
+                  value={withdrawAmount}
+                  onChange={(e) => {
+                    setWithdrawAmount(e.target.value);
+                    validateAmount(e.target.value);
+                  }}
+                  placeholder={`Min ₺${minLimit.toLocaleString("tr-TR")}`}
+                  className="w-64 bg-gray-800 border border-gray-600 rounded-full py-3 px-4 text-center text-white focus:outline-none"
+                />
+                {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+
+                <button
+                  onClick={handleWithdraw}
+                  disabled={loading}
+                  className="w-64 mt-6 bg-white text-black font-bold py-3 px-6 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-60"
+                >
+                  {loading ? "İşleniyor..." : "Para çekme"}
+                </button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Ödeme yöntemleri listesi overlay (yenilenmiş) */}
+      {/* ÖDEME YÖNTEMLERİ POPUP */}
       {methodsOverlayOpen && (
         <div className="fixed inset-0 z-[55] flex items-center justify-center bg-black/80 p-4">
           <div className="bg-[#111] rounded-xl w-full max-w-2xl overflow-hidden shadow-2xl border border-[#ffb400]/40">
-            {/* Üst bar */}
             <div className="bg-[#ffb400] text-black flex items-center justify-between px-4 py-3">
               <span className="font-bold">Ödeme yöntemi seç</span>
               <button onClick={() => setMethodsOverlayOpen(false)} className="text-2xl font-bold hover:opacity-80">✕</button>
             </div>
 
-            {/* Liste */}
             <div className="max-h-[80vh] overflow-y-auto divide-y divide-white/10">
               {paymentImages.map((img) => (
                 <button
@@ -207,6 +317,8 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
                   onClick={() => {
                     setSelectedMethod(img.id);
                     setMethodsOverlayOpen(false);
+                    setError(null);
+                    setMessage(null);
                   }}
                   className={`w-full flex items-center justify-between gap-4 px-4 py-3 text-left transition-all duration-200 border-l-4 ${
                     selectedMethod === img.id
@@ -214,7 +326,6 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
                       : "border-transparent hover:border-[#ffb400]/80 hover:bg-white/5"
                   }`}
                 >
-                  {/* Sol kısım: logo + isim */}
                   <div className="flex items-center gap-4">
                     <div className="bg-white rounded-md p-2 w-28 h-12 flex items-center justify-center">
                       <img src={img.src} alt={img.alt} className="max-h-10 object-contain" />
@@ -225,7 +336,6 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
                     </div>
                   </div>
 
-                  {/* Sağ ok */}
                   <i className="fas fa-chevron-right text-white/40"></i>
                 </button>
               ))}
@@ -236,4 +346,3 @@ export default function PaymentModal({ onClose, user, onDeposit }: PaymentModalP
     </div>
   );
 }
-

@@ -23,7 +23,7 @@ function App() {
   const [showPayment, setShowPayment] = useState(false);
   const [, setSelectedGame] = useState<string | null>(null);
 
-  // Check for existing user session
+  // Kullanıcı oturum kontrolü
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -43,7 +43,6 @@ function App() {
   };
 
   const handleGameClick = (gameId: string) => {
-    // Always redirect to registration modal when clicking on games
     setShowRegister(true);
     setSelectedGame(gameId);
   };
@@ -59,7 +58,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-primary text-white">
+    <div className="min-h-screen bg-primary text-white relative pb-16 md:pb-0">
       <Header 
         user={user} 
         onLogin={() => setShowLogin(true)}
@@ -74,14 +73,14 @@ function App() {
           onPayment={() => setShowPayment(true)}
         />
         
-        {/* Address Section */}
+        {/* Adres Bölümü */}
         <section className="bg-primary py-4">
           <div className="max-w-7xl mx-auto px-4 text-center">
             <p className="text-white text-sm">
               Güncel adresimiz için: 
               <span className="text-secondary ml-2">
                 <i className="fab fa-telegram mr-1"></i>
-                t.me/casibomadres linkin kullanınız
+                t.me/casibomadres linkini kullanınız
               </span>
             </p>
           </div>
@@ -94,7 +93,7 @@ function App() {
       
       <Footer />
 
-      {/* Modals */}
+      {/* Modallar */}
       {showLogin && (
         <LoginModal 
           onClose={() => setShowLogin(false)}
@@ -124,9 +123,41 @@ function App() {
           user={user}
         />
       )}
+
+      {/* 📱 Mobil Alt Menü */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#111] border-t border-[#2a2a2a] flex justify-around items-center py-2 md:hidden">
+        {/* Spor */}
+        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
+          <i className="fas fa-futbol text-lg mb-1"></i>
+          <span className="text-xs font-semibold">SPOR</span>
+        </button>
+
+        {/* Casino */}
+        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
+          <i className="fas fa-dice text-lg mb-1"></i>
+          <span className="text-xs font-semibold">CASİNO</span>
+        </button>
+
+        {/* Canlı Destek */}
+        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
+          <i className="fas fa-comments text-lg mb-1"></i>
+          <span className="text-xs font-semibold">CANLI DESTEK</span>
+        </button>
+
+        {/* Canlı Casino */}
+        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
+          <i className="fas fa-user-tie text-lg mb-1"></i>
+          <span className="text-xs font-semibold">CANLI CASİNO</span>
+        </button>
+
+        {/* Menü */}
+        <button className="flex flex-col items-center text-gray-300 hover:text-[#ffb400] transition-colors">
+          <i className="fas fa-bars text-lg mb-1"></i>
+          <span className="text-xs font-semibold">MENÜ</span>
+        </button>
+      </div>
     </div>
   );
 }
 
 export default App;
-
